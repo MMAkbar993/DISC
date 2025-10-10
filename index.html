@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISC Leadership Assessment - Discover Your Leadership Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+        <div class="bg-shape shape-4"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="brand-info">
+                        <h1 class="company-name">DISC Leadership</h1>
+                        <p class="company-tagline">Assessment Platform</p>
+                    </div>
+                </div>
+                <!-- <div class="header-actions">
+                    <button class="btn-admin" onclick="window.open('admin.html', '_blank')">
+                        <i class="fas fa-cog"></i>
+                        <span>Admin</span>
+                    </button>
+                </div> -->
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        Discover Your <span class="highlight">Leadership Style</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Take our comprehensive DISC assessment to unlock your leadership potential 
+                        and understand how you communicate, make decisions, and lead teams.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-clock"></i>
+                            <span>10-15 minutes</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Detailed Analysis</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-certificate"></i>
+                            <span>Professional Report</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="assessment-preview">
+                        <div class="preview-card">
+                            <div class="preview-header">
+                                <div class="preview-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="preview-info">
+                                    <h4>Leadership Assessment</h4>
+                                    <p>24 Questions • DISC Analysis</p>
+                                </div>
+                            </div>
+                            <div class="preview-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill"></div>
+                                </div>
+                                <span class="progress-text">Complete to get your profile</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Section -->
+        <section id="loginSection" class="login-section">
+            <div class="login-card">
+                <div class="login-header">
+                    <h2 class="login-title">Ready to Begin?</h2>
+                    <p class="login-subtitle">Enter your credentials to start your leadership assessment</p>
+                </div>
+
+                <!-- Instructions Section -->
+                <div class="instructions-section">
+                    <h3 class="instructions-title">
+                        <i class="fas fa-info-circle"></i>
+                        How It Works
+                    </h3>
+                    <div class="instructions-grid">
+                        <div class="instruction-card">
+                            <div class="instruction-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="instruction-content">
+                                <h4>Answer Questions</h4>
+                                <p>24 behavioral scenarios to evaluate your leadership style</p>
+                            </div>
+                        </div>
+                        <div class="instruction-card">
+                            <div class="instruction-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="instruction-content">
+                                <h4>Choose Most & Least</h4>
+                                <p>For each scenario, select what's <strong>most</strong> and <strong>least</strong> like you</p>
+                            </div>
+                        </div>
+                        <div class="instruction-card">
+                            <div class="instruction-icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <div class="instruction-content">
+                                <h4>Get Your Profile</h4>
+                                <p>Receive a detailed DISC analysis of your leadership strengths</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="loginForm" class="login-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="username">
+                                <i class="fas fa-user"></i>
+                                Username
+                            </label>
+                            <input type="text" id="username" class="form-input" placeholder="Enter your username" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="accessCode">
+                                <i class="fas fa-key"></i>
+                                Access Code
+                            </label>
+                            <input type="text" id="accessCode" class="form-input" placeholder="Enter your access code" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-play"></i>
+                        Start Assessment
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="pricing-section">
+            <div class="pricing-header">
+                <h2 class="pricing-title">
+                    <i class="fas fa-users"></i>
+                    Volume Licensing Options
+                </h2>
+                <p class="pricing-subtitle">Choose the right package for your organization's needs</p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="pricing-content">
+                        <h3 class="pricing-label">Individual</h3>
+                        <p class="pricing-description">Single user access with personalized DISC report</p>
+                        <div class="pricing-features">
+                            <div class="feature">
+                                <i class="fas fa-check"></i>
+                                <span>Personal assessment</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-check"></i>
+                                <span>Detailed report</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="pricing-content">
+                        <h3 class="pricing-label">Team Package</h3>
+                        <p class="pricing-description">Small team package with individual and team reports</p>
+                        <div class="pricing-features">
+                            <div class="feature">
+                                <i class="fas fa-check"></i>
+                                <span>2-9 users</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-check"></i>
+                                <span>Team analysis</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-check"></i>
+                                <span>Group reports</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Most Popular</div>
+                    <div class="pricing-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="pricing-content">
+                        <h3 class="pricing-label">Enterprise</h3>
+                        <p class="pricing-description">Large volume licensing with comprehensive reporting</p>
+                        <div class="pricing-features">
+                            <div class="feature">
+                                <i class="fas fa-check"></i>
+                                <span>10+ users</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-check"></i>
+                                <span>Admin dashboard</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-check"></i>
+                                <span>Custom branding</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-check"></i>
+                                <span>Priority support</span>
+                            </div>
+                        </div>
+                        <button class="btn-enterprise" onclick="contactAdministrator()">
+                            <i class="fas fa-arrow-right"></i>
+                            Contact for Pricing
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </div>
+
+        <!-- Assessment Section -->
+        <div id="assessmentSection" class="assessment-section">
+            <div class="assessment-header">
+                <h2 class="assessment-title">DISC Leadership Assessment</h2>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Progress</span>
+                        <span id="progressText">0 of 24 questions completed</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="questionsContainer">
+                <!-- Questions will be dynamically generated here -->
+            </div>
+
+            <div class="navigation-container">
+                <button id="prevBtn" class="nav-button prev" disabled>← Previous</button>
+                <div class="question-status" id="questionStatus">Question 1 of 24</div>
+                <button id="nextBtn" class="nav-button" disabled>Next →</button>
+            </div>
+
+            <div class="submit-container">
+                <button id="submitBtn" class="btn-submit" disabled>Submit Assessment</button>
+            </div>
+        </div>
+
+        <!-- Completion Message -->
+        <div id="completionSection" class="completion-message">
+            <div class="completion-icon">✓</div>
+            <h2 class="completion-title">Assessment Complete!</h2>
+            <p class="completion-text">
+                Thank you for completing your DISC Leadership Assessment.<br>
+                Your results are being processed and will be available shortly.
+            </p>
+        </div>
+    </div>
+
+
+<script src="js/script.js"></script>
+</body>
+
+</html>

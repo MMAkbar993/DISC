@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Contact - DISC Leadership Assessment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .contact-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .contact-card {
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .contact-form {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .contact-subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-form {
+                padding: 30px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contact-page">
+        <div class="contact-card">
+            <a href="index.html" class="back-link">← Back to Assessment</a>
+            
+            <div class="contact-form">
+                <h1 class="contact-title">Enterprise Licensing Inquiry</h1>
+                <p class="contact-subtitle">Get in touch for high-volume assessment packages and custom solutions</p>
+                
+                <form id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="firstName">First Name</label>
+                            <input type="text" id="firstName" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lastName">Last Name</label>
+                            <input type="text" id="lastName" class="form-input" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address</label>
+                            <input type="email" id="email" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="phone">Phone Number</label>
+                            <input type="tel" id="phone" class="form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="company">Company/Organization</label>
+                            <input type="text" id="company" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="position">Position/Title</label>
+                            <input type="text" id="position" class="form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="assessments">Number of Assessments Needed</label>
+                            <select id="assessments" class="form-input" required>
+                                <option value="">Select range</option>
+                                <option value="10-25">10-25 assessments</option>
+                                <option value="26-50">26-50 assessments</option>
+                                <option value="51-100">51-100 assessments</option>
+                                <option value="101-250">101-250 assessments</option>
+                                <option value="250+">250+ assessments</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="timeline">Timeline</label>
+                            <select id="timeline" class="form-input">
+                                <option value="">Select timeline</option>
+                                <option value="immediate">Immediate</option>
+                                <option value="1-month">Within 1 month</option>
+                                <option value="3-months">Within 3 months</option>
+                                <option value="6-months">Within 6 months</option>
+                                <option value="flexible">Flexible</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label" for="requirements">Specific Requirements & Questions</label>
+                        <textarea id="requirements" class="form-input" placeholder="Please describe your specific needs, any custom requirements, training needs, or questions you may have..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Send Inquiry</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                company: document.getElementById('company').value,
+                position: document.getElementById('position').value,
+                assessments: document.getElementById('assessments').value,
+                timeline: document.getElementById('timeline').value,
+                requirements: document.getElementById('requirements').value
+            };
+            
+            // Simulate form submission
+            alert(`Thank you for your inquiry, ${formData.firstName}!\n\nWe have received your enterprise licensing request and will contact you within 24 hours at ${formData.email}.\n\nYour request details:\n- Company: ${formData.company}\n- Assessments needed: ${formData.assessments}\n- Timeline: ${formData.timeline}\n\nFor immediate assistance, you can also contact us at:\n📧 admin@discleadership.com\n📞 +1 (555) 123-4567`);
+            
+            // Reset form
+            this.reset();
+        });
+    </script>
+</body>
+
+</html>
