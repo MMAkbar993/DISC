@@ -1,0 +1,3629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional DISC Leadership Assessment Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --light-bg: #ecf0f1;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --custom-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--custom-font);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .platform-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--box-shadow);
+            max-width: 1400px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            color: var(--white);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .admin-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .admin-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .brand-container {
+            margin-bottom: 30px;
+        }
+
+        .company-logo {
+            width: 100px;
+            height: 100px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--white);
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .company-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .company-tagline {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .assessment-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--warning-color);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+
+        .main-content {
+            padding: 50px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 16px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--light-bg);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+            background: var(--white);
+            font-family: var(--custom-font);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            color: var(--white);
+            padding: 16px 32px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: var(--custom-font);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #229954);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .assessment-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .question-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            border: 1px solid var(--light-bg);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            background: var(--secondary-color);
+            color: var(--white);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 20px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            color: var(--text-dark);
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .choices-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .choice-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border: 2px solid transparent;
+            transition: var(--transition);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .choice-item:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .choice-letter {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .choice-text {
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        .selection-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .selection-btn {
+            padding: 12px 24px;
+            border: 2px solid;
+            border-radius: 25px;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            font-family: var(--custom-font);
+        }
+
+        .most-btn {
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+
+        .most-btn:hover, .most-btn.selected {
+            background: var(--success-color);
+            color: var(--white);
+        }
+
+        .least-btn {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .least-btn:hover, .least-btn.selected {
+            background: var(--accent-color);
+            color: var(--white);
+        }
+
+        .choice-item.selected-most {
+            border-color: var(--success-color);
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .choice-item.selected-least {
+            border-color: var(--accent-color);
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .admin-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 20px 0;
+        }
+
+        .admin-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .admin-section h3 {
+            color: var(--text-dark);
+            margin-bottom: 25px;
+            font-size: 20px;
+            font-weight: 700;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .color-input {
+            width: 60px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .file-input {
+            margin-bottom: 10px;
+        }
+
+        .access-codes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--light-bg);
+        }
+
+        .access-code-item {
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 12px 8px;
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+
+        .access-code-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 60px 40px;
+            background: linear-gradient(135deg, var(--success-color), #229954);
+            color: var(--white);
+            border-radius: 20px;
+            margin: 30px 0;
+            box-shadow: var(--box-shadow);
+        }
+
+        .completion-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .completion-subtitle {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .participants-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .participants-table th,
+        .participants-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-bg);
+        }
+
+        .participants-table th {
+            background: var(--light-bg);
+            font-weight: 600;
+        }
+
+        .participants-table tr:hover {
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .report-btn {
+            background: var(--warning-color);
+            color: var(--white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .report-btn:hover {
+            background: #e67e22;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .report-customization {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .report-customization h4 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .report-preview {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 30px 20px;
+            }
+
+            .choices-container {
+                grid-template-columns: 1fr;
+            }
+
+            .company-name {
+                font-size: 22px;
+            }
+
+            .assessment-title {
+                font-size: 24px;
+            }
+
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="platform-container">
+        <header class="header" id="headerSection">
+            <button class="admin-toggle" onclick="AdminModule.togglePanel()">Admin Panel</button>
+            
+            <div class="brand-container">
+                <div class="company-logo" id="companyLogo">CR</div>
+                <div class="company-name" id="companyName">CHROMIUM RESOURCES</div>
+                <div class="company-tagline" id="companyTagline">Professional Leadership Development Solutions</div>
+            </div>
+            
+            <div class="assessment-title">Professional DISC Leadership Assessment</div>
+        </header>
+
+        <main class="main-content">
+            <!-- Login Section -->
+            <section id="loginSection" class="section active">
+                <div class="form-container">
+                    <h2 style="margin-bottom: 30px; color: var(--text-dark); font-size: 28px;">Begin Your Leadership Journey</h2>
+                    <p style="margin-bottom: 40px; color: var(--text-light); font-size: 18px; line-height: 1.6;">
+                        Discover your unique leadership style through our comprehensive 24-question DISC assessment. 
+                        Gain deep insights into your leadership approach, communication style, and development opportunities.
+                    </p>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="participantName">Full Name</label>
+                        <input type="text" id="participantName" class="form-input" placeholder="Enter your complete full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="jobRole">Job Role/Position</label>
+                        <input type="text" id="jobRole" class="form-input" placeholder="Enter your current position" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="accessCode">Access Code</label>
+                        <input type="password" id="accessCode" class="form-input" placeholder="Enter your unique access code" required>
+                    </div>
+                    
+                    <button class="btn" onclick="AssessmentModule.startAssessment()">Start Assessment</button>
+                </div>
+            </section>
+
+            <!-- Admin Panel Section -->
+            <section id="adminSection" class="section">
+                <div class="admin-panel">
+                    <h2 style="color: var(--text-dark); margin-bottom: 40px; font-size: 28px;">Admin Control Panel</h2>
+                    
+                    <div class="admin-section">
+                        <h3>Corporate Branding & Design</h3>
+                        <div class="admin-grid">
+                            <div class="form-group">
+                                <label class="form-label">Company Logo</label>
+                                <input type="file" id="logoUpload" class="file-input" accept="image/*" onchange="AdminModule.uploadLogo()">
+                                <small style="color: var(--text-light);">Upload PNG, JPG, or SVG (recommended: 200x200px)</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Background Image</label>
+                                <input type="file" id="backgroundUpload" class="file-input" accept="image/*" onchange="AdminModule.uploadBackground()">
+                                <small style="color: var(--text-light);">Upload background image for header</small>
+                            </div>
+                        </div>
+                        
+                        <div class="admin-grid">
+                            <div class="form-group">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" id="adminCompanyName" class="form-input" value="CHROMIUM RESOURCES" onchange="AdminModule.updateBranding()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Company Name Font Size</label>
+                                <select id="companyNameFontSize" class="form-input" onchange="AdminModule.updateBranding()">
+                                    <option value="20">Small (20px)</option>
+                                    <option value="24" selected>Medium (24px)</option>
+                                    <option value="28">Large (28px)</option>
+                                    <option value="32">Extra Large (32px)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="admin-grid">
+                            <div class="form-group">
+                                <label class="form-label">Company Tagline</label>
+                                <input type="text" id="adminTagline" class="form-input" value="Professional Leadership Development Solutions" onchange="AdminModule.updateBranding()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tagline Font Size</label>
+                                <select id="taglineFontSize" class="form-input" onchange="AdminModule.updateBranding()">
+                                    <option value="12">Small (12px)</option>
+                                    <option value="14">Medium (14px)</option>
+                                    <option value="16" selected>Large (16px)</option>
+                                    <option value="18">Extra Large (18px)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="admin-grid">
+                            <div class="form-group">
+                                <label class="form-label">Primary Color</label>
+                                <input type="color" id="primaryColor" class="color-input" value="#2c3e50" onchange="AdminModule.updateColors()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Secondary Color</label>
+                                <input type="color" id="secondaryColor" class="color-input" value="#3498db" onchange="AdminModule.updateColors()">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Font Family</label>
+                            <select id="fontFamily" class="form-input" onchange="AdminModule.updateFont()">
+                                <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Segoe UI (Default)</option>
+                                <option value="'Arial', sans-serif">Arial</option>
+                                <option value="'Helvetica', sans-serif">Helvetica</option>
+                                <option value="'Times New Roman', serif">Times New Roman</option>
+                                <option value="'Georgia', serif">Georgia</option>
+                                <option value="'Roboto', sans-serif">Roboto</option>
+                                <option value="'Open Sans', sans-serif">Open Sans</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Company Information</label>
+                            <textarea id="companyInfo" class="form-input" rows="4" placeholder="Enter company address, contact details, website, etc." onchange="AdminModule.updateBranding()"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="admin-section">
+                        <h3>PDF Report Customization</h3>
+                        <div class="report-customization">
+                            <h4>📄 Report Cover Customization</h4>
+                            <p style="margin-bottom: 15px; color: #856404;">
+                                The PDF reports will automatically include your uploaded logo and background image on the cover page. 
+                                You can further customize the report appearance below:
+                            </p>
+                            
+                            <div class="admin-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Report Title</label>
+                                    <input type="text" id="reportTitle" class="form-input" value="DISC LEADERSHIP ASSESSMENT" onchange="AdminModule.updateReportSettings()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Report Subtitle</label>
+                                    <input type="text" id="reportSubtitle" class="form-input" value="Professional Development Report" onchange="AdminModule.updateReportSettings()">
+                                </div>
+                            </div>
+                            
+                            <div class="admin-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Logo Size on Report</label>
+                                    <select id="logoSize" class="form-input" onchange="AdminModule.updateReportSettings()">
+                                        <option value="small">Small (30x30)</option>
+                                        <option value="medium" selected>Medium (40x40)</option>
+                                        <option value="large">Large (60x60)</option>
+                                        <option value="xlarge">Extra Large (80x80)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Background Image Size</label>
+                                    <select id="backgroundImageSize" class="form-input" onchange="AdminModule.updateReportSettings()">
+                                        <option value="cover" selected>Cover Full Page</option>
+                                        <option value="contain">Fit to Page</option>
+                                        <option value="50%">Half Page Width</option>
+                                        <option value="75%">Three Quarter Width</option>
+                                        <option value="100%">Full Width</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Background Opacity</label>
+                                    <select id="backgroundOpacity" class="form-input" onchange="AdminModule.updateReportSettings()">
+                                        <option value="0.2">Very Light (20%)</option>
+                                        <option value="0.3">Light (30%)</option>
+                                        <option value="0.4">Medium Light (40%)</option>
+                                        <option value="0.5">Medium (50%)</option>
+                                        <option value="0.6" selected>Dark (60%)</option>
+                                        <option value="0.7">Very Dark (70%)</option>
+                                        <option value="0.8">Extra Dark (80%)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Background Position</label>
+                                    <select id="backgroundPosition" class="form-input" onchange="AdminModule.updateReportSettings()">
+                                        <option value="center" selected>Center</option>
+                                        <option value="top">Top</option>
+                                        <option value="bottom">Bottom</option>
+                                        <option value="left">Left</option>
+                                        <option value="right">Right</option>
+                                        <option value="top left">Top Left</option>
+                                        <option value="top right">Top Right</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Report Footer Text</label>
+                                <input type="text" id="reportFooter" class="form-input" value="Confidential Leadership Development Report" onchange="AdminModule.updateReportSettings()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">PDF Page Background Color</label>
+                                <input type="color" id="pdfBackgroundColor" class="color-input" value="#f8f9fa" onchange="AdminModule.updateReportSettings()">
+                                <small style="color: var(--text-light); margin-left: 10px;">Professional background color for all PDF pages</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Page Header Background Color</label>
+                                <input type="color" id="pageHeaderColor" class="color-input" value="#3498db" onchange="AdminModule.updateReportSettings()">
+                                <small style="color: var(--text-light); margin-left: 10px;">Color for page header accent bars</small>
+                            </div>
+                            
+                            <div class="report-preview">
+                                <strong>Preview:</strong> Your reports will feature your company logo in the top-left corner, 
+                                your background image (if uploaded) covering the full page with the selected opacity overlay, 
+                                and all your branding elements integrated professionally throughout the document.
+                            </div>
+                            
+                            <div style="text-align: center; margin-top: 20px;">
+                                <button class="btn btn-success" onclick="AdminModule.saveAllSettings()">
+                                    💾 Save All Settings
+                                </button>
+                                <span id="saveStatus" style="margin-left: 15px; font-weight: 600;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3>Access Code Management</h3>
+                        <div style="margin-bottom: 20px;">
+                            <button class="btn btn-success" onclick="AdminModule.generateAccessCodes()">Generate New Access Codes</button>
+                            <span id="codeCount" style="margin-left: 20px; font-weight: 600; color: var(--text-dark);"></span>
+                        </div>
+                        <div id="accessCodesContainer" class="access-codes-grid"></div>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3>Assessment Results & Report Management</h3>
+                        
+                        <!-- Team Report Selection Section -->
+                        <div style="background: #e8f4fd; border: 1px solid #bee5eb; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+                            <h4 style="color: #0c5460; margin-bottom: 15px; font-size: 16px;">📊 Team Management Report</h4>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #0c5460;">
+                                    Select Participants for Team Report:
+                                </label>
+                                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                    <button class="btn" onclick="AdminModule.selectAllParticipants()" style="padding: 8px 16px; font-size: 12px;">
+                                        Select All
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="AdminModule.clearAllParticipants()" style="padding: 8px 16px; font-size: 12px;">
+                                        Clear All
+                                    </button>
+                                </div>
+                                
+                                <div id="participantSelectionContainer" style="max-height: 200px; overflow-y: auto; border: 1px solid #bee5eb; border-radius: 6px; padding: 15px; background: white;">
+                                    <p style="color: var(--text-light); text-align: center; margin: 0;">No participants available for selection</p>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <button class="btn btn-success" onclick="AdminModule.generateSelectedTeamReport()" id="teamReportBtn" disabled>
+                                    📊 Generate Team Management Report
+                                </button>
+                                <span id="selectedCount" style="font-size: 12px; color: #0c5460; font-weight: 600;">
+                                    0 participants selected (minimum 3 required)
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Individual Participants Table -->
+                        <div id="participantsContainer">
+                            <h4 style="color: var(--text-dark); margin-bottom: 15px; font-size: 16px;">Individual Assessment Results</h4>
+                            <table class="participants-table" id="participantsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Position</th>
+                                        <th>Date</th>
+                                        <th>Profile</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="participantsTableBody">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; color: var(--text-light);">No completed assessments yet</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-secondary" onclick="AdminModule.togglePanel()">Close Admin Panel</button>
+                </div>
+            </section>
+
+            <!-- Assessment Section -->
+            <section id="assessmentSection" class="section">
+                <div class="assessment-container">
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h2 style="color: var(--text-dark); font-size: 24px; margin-bottom: 10px;">DISC Leadership Assessment</h2>
+                        <p style="color: var(--text-light); font-size: 16px;">For each question, select the statement that is MOST like you and the statement that is LEAST like you.</p>
+                    </div>
+                    
+                    <div id="questionsContainer"></div>
+                    
+                    <div style="text-align: center; margin-top: 40px;">
+                        <button class="btn btn-success" id="submitAssessment" onclick="AssessmentModule.submitAssessment()" disabled>
+                            Submit Assessment
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Completion Section -->
+            <section id="completionSection" class="section">
+                <div class="completion-message">
+                    <div class="completion-title">Assessment Complete!</div>
+                    <div class="completion-subtitle">Thank you for completing the DISC Leadership Assessment</div>
+                    
+                    <p style="font-size: 18px; margin: 30px 0;">
+                        Your responses have been recorded successfully. Your comprehensive leadership report 
+                        will be generated by your administrator and shared with you shortly.
+                    </p>
+                    
+                    <button class="btn btn-secondary" onclick="AssessmentModule.restart()">Take Assessment Again</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Core Data Module - DISC Questions with 4 choices each
+        const DataModule = (() => {
+            const DISC_QUESTIONS = Object.freeze([
+                {
+                    id: 1,
+                    choices: [
+                        { text: "I take charge and drive results", type: "D" },
+                        { text: "I inspire and motivate others", type: "I" },
+                        { text: "I provide steady support", type: "S" },
+                        { text: "I analyze details carefully", type: "C" }
+                    ]
+                },
+                {
+                    id: 2,
+                    choices: [
+                        { text: "I make quick decisions", type: "D" },
+                        { text: "I engage others enthusiastically", type: "I" },
+                        { text: "I listen patiently", type: "S" },
+                        { text: "I follow systematic procedures", type: "C" }
+                    ]
+                },
+                {
+                    id: 3,
+                    choices: [
+                        { text: "I challenge the status quo", type: "D" },
+                        { text: "I build relationships easily", type: "I" },
+                        { text: "I maintain stability", type: "S" },
+                        { text: "I focus on quality and precision", type: "C" }
+                    ]
+                },
+                {
+                    id: 4,
+                    choices: [
+                        { text: "I take calculated risks", type: "D" },
+                        { text: "I express ideas with passion", type: "I" },
+                        { text: "I seek consensus before acting", type: "S" },
+                        { text: "I research thoroughly", type: "C" }
+                    ]
+                },
+                {
+                    id: 5,
+                    choices: [
+                        { text: "I compete to win", type: "D" },
+                        { text: "I influence through charm", type: "I" },
+                        { text: "I support team members", type: "S" },
+                        { text: "I maintain high standards", type: "C" }
+                    ]
+                },
+                {
+                    id: 6,
+                    choices: [
+                        { text: "I act decisively", type: "D" },
+                        { text: "I share ideas openly", type: "I" },
+                        { text: "I work steadily toward goals", type: "S" },
+                        { text: "I verify facts carefully", type: "C" }
+                    ]
+                },
+                {
+                    id: 7,
+                    choices: [
+                        { text: "I push for immediate results", type: "D" },
+                        { text: "I create excitement about projects", type: "I" },
+                        { text: "I prefer gradual, steady progress", type: "S" },
+                        { text: "I ensure accuracy in all details", type: "C" }
+                    ]
+                },
+                {
+                    id: 8,
+                    choices: [
+                        { text: "I confront problems directly", type: "D" },
+                        { text: "I persuade others to my viewpoint", type: "I" },
+                        { text: "I avoid unnecessary conflict", type: "S" },
+                        { text: "I analyze all possible outcomes", type: "C" }
+                    ]
+                },
+                {
+                    id: 9,
+                    choices: [
+                        { text: "I prefer to lead from the front", type: "D" },
+                        { text: "I enjoy being the center of attention", type: "I" },
+                        { text: "I prefer working behind the scenes", type: "S" },
+                        { text: "I prefer working independently", type: "C" }
+                    ]
+                },
+                {
+                    id: 10,
+                    choices: [
+                        { text: "I focus on bottom-line results", type: "D" },
+                        { text: "I focus on people and relationships", type: "I" },
+                        { text: "I focus on team harmony", type: "S" },
+                        { text: "I focus on processes and systems", type: "C" }
+                    ]
+                },
+                {
+                    id: 11,
+                    choices: [
+                        { text: "I am direct in my communication", type: "D" },
+                        { text: "I am enthusiastic in my communication", type: "I" },
+                        { text: "I am diplomatic in my communication", type: "S" },
+                        { text: "I am precise in my communication", type: "C" }
+                    ]
+                },
+                {
+                    id: 12,
+                    choices: [
+                        { text: "I thrive under pressure", type: "D" },
+                        { text: "I thrive in social situations", type: "I" },
+                        { text: "I thrive in stable environments", type: "S" },
+                        { text: "I thrive when given time to think", type: "C" }
+                    ]
+                },
+                {
+                    id: 13,
+                    choices: [
+                        { text: "I am motivated by challenges", type: "D" },
+                        { text: "I am motivated by recognition", type: "I" },
+                        { text: "I am motivated by security", type: "S" },
+                        { text: "I am motivated by accuracy", type: "C" }
+                    ]
+                },
+                {
+                    id: 14,
+                    choices: [
+                        { text: "I make decisions quickly", type: "D" },
+                        { text: "I make decisions based on gut feeling", type: "I" },
+                        { text: "I make decisions after consulting others", type: "S" },
+                        { text: "I make decisions based on data", type: "C" }
+                    ]
+                },
+                {
+                    id: 15,
+                    choices: [
+                        { text: "I prefer fast-paced environments", type: "D" },
+                        { text: "I prefer dynamic, changing environments", type: "I" },
+                        { text: "I prefer predictable environments", type: "S" },
+                        { text: "I prefer structured environments", type: "C" }
+                    ]
+                },
+                {
+                    id: 16,
+                    choices: [
+                        { text: "I am comfortable with authority", type: "D" },
+                        { text: "I am comfortable with public speaking", type: "I" },
+                        { text: "I am comfortable with routine tasks", type: "S" },
+                        { text: "I am comfortable with complex problems", type: "C" }
+                    ]
+                },
+                {
+                    id: 17,
+                    choices: [
+                        { text: "I value efficiency above all", type: "D" },
+                        { text: "I value enthusiasm above all", type: "I" },
+                        { text: "I value loyalty above all", type: "S" },
+                        { text: "I value accuracy above all", type: "C" }
+                    ]
+                },
+                {
+                    id: 18,
+                    choices: [
+                        { text: "I handle criticism by fighting back", type: "D" },
+                        { text: "I handle criticism by talking it through", type: "I" },
+                        { text: "I handle criticism by withdrawing", type: "S" },
+                        { text: "I handle criticism by analyzing it", type: "C" }
+                    ]
+                },
+                {
+                    id: 19,
+                    choices: [
+                        { text: "I prefer to control situations", type: "D" },
+                        { text: "I prefer to influence situations", type: "I" },
+                        { text: "I prefer to support situations", type: "S" },
+                        { text: "I prefer to analyze situations", type: "C" }
+                    ]
+                },
+                {
+                    id: 20,
+                    choices: [
+                        { text: "I am seen as demanding", type: "D" },
+                        { text: "I am seen as optimistic", type: "I" },
+                        { text: "I am seen as patient", type: "S" },
+                        { text: "I am seen as careful", type: "C" }
+                    ]
+                },
+                {
+                    id: 21,
+                    choices: [
+                        { text: "I fear being taken advantage of", type: "D" },
+                        { text: "I fear social rejection", type: "I" },
+                        { text: "I fear sudden change", type: "S" },
+                        { text: "I fear making mistakes", type: "C" }
+                    ]
+                },
+                {
+                    id: 22,
+                    choices: [
+                        { text: "I need to see tangible results", type: "D" },
+                        { text: "I need social interaction", type: "I" },
+                        { text: "I need time to adjust to change", type: "S" },
+                        { text: "I need clear instructions", type: "C" }
+                    ]
+                },
+                {
+                    id: 23,
+                    choices: [
+                        { text: "I solve problems by taking action", type: "D" },
+                        { text: "I solve problems by brainstorming", type: "I" },
+                        { text: "I solve problems by seeking input", type: "S" },
+                        { text: "I solve problems by researching", type: "C" }
+                    ]
+                },
+                {
+                    id: 24,
+                    choices: [
+                        { text: "I measure success by results achieved", type: "D" },
+                        { text: "I measure success by relationships built", type: "I" },
+                        { text: "I measure success by stability maintained", type: "S" },
+                        { text: "I measure success by quality delivered", type: "C" }
+                    ]
+                }
+            ]);
+
+            const LEADERSHIP_PROFILES = Object.freeze({
+                'DI': {
+                    title: 'The Inspirational Driver',
+                    traits: ['Bold', 'Inspiring', 'Energetic', 'Visionary'],
+                    description: 'You combine decisive action with inspirational communication. You drive results while motivating others to follow your vision.',
+                    strengths: ['Natural leadership presence', 'Ability to inspire and motivate', 'Quick decision-making', 'Results-oriented approach'],
+                    challenges: ['May appear impatient', 'Could overlook details', 'Might dominate discussions', 'May rush through processes'],
+                    communication: 'Direct and enthusiastic, you communicate with passion and conviction, inspiring others to action.',
+                    decisionMaking: 'You make quick, intuitive decisions based on vision and gut instinct, often inspiring confidence in others.',
+                    teamDynamics: 'You naturally take charge while energizing the team, creating momentum and driving toward ambitious goals.'
+                },
+                'DC': {
+                    title: 'The Demanding Perfectionist',
+                    traits: ['Results-focused', 'Systematic', 'Demanding', 'Precise'],
+                    description: 'You blend high standards with decisive action. You push for excellence while maintaining strict quality controls.',
+                    strengths: ['High performance standards', 'Systematic approach', 'Quality focus', 'Decisive leadership'],
+                    challenges: ['May be overly critical', 'Could create pressure', 'Might resist change', 'May overlook people needs'],
+                    communication: 'Direct and factual, you communicate expectations clearly and hold others accountable for results.',
+                    decisionMaking: 'You make decisions based on data and analysis, ensuring quality and efficiency in outcomes.',
+                    teamDynamics: 'You set high standards and drive performance, creating structured environments focused on excellence.'
+                },
+                'DS': {
+                    title: 'The Gentle Commander',
+                    traits: ['Firm yet supportive', 'Steady', 'Reliable', 'Patient'],
+                    description: 'You lead with quiet strength, combining decisiveness with genuine care for your team members.',
+                    strengths: ['Balanced leadership', 'Team loyalty', 'Steady performance', 'Supportive approach'],
+                    challenges: ['May avoid difficult conversations', 'Could be slow to change', 'Might suppress own needs', 'May resist confrontation'],
+                    communication: 'Firm but caring, you communicate with respect and consideration for others\' feelings and perspectives.',
+                    decisionMaking: 'You make thoughtful decisions that balance results with team welfare and long-term stability.',
+                    teamDynamics: 'You create stable, supportive environments where team members feel secure and valued.'
+                },
+                'ID': {
+                    title: 'The Enthusiastic Achiever',
+                    traits: ['Dynamic', 'Persuasive', 'Goal-oriented', 'Charismatic'],
+                    description: 'You inspire others toward ambitious goals with infectious enthusiasm and compelling vision.',
+                    strengths: ['Inspirational leadership', 'Strong persuasion skills', 'Goal achievement', 'Team motivation'],
+                    challenges: ['May over-promise', 'Could lack follow-through', 'Might ignore details', 'May be overly optimistic'],
+                    communication: 'Enthusiastic and persuasive, you communicate with energy and conviction, inspiring others to action.',
+                    decisionMaking: 'You make decisions quickly based on intuition and vision, often inspiring confidence and buy-in.',
+                    teamDynamics: 'You energize teams and create excitement around goals, fostering collaboration and achievement.'
+                },
+                'IS': {
+                    title: 'The People-Focused Motivator',
+                    traits: ['Warm', 'Encouraging', 'Collaborative', 'Optimistic'],
+                    description: 'You create positive environments where people feel valued and motivated to contribute their best.',
+                    strengths: ['Team building', 'Positive influence', 'Collaborative approach', 'People development'],
+                    challenges: ['May avoid conflict', 'Could be overly trusting', 'Might lack assertiveness', 'May struggle with tough decisions'],
+                    communication: 'Warm and encouraging, you communicate with empathy and create open, supportive dialogue.',
+                    decisionMaking: 'You make decisions collaboratively, considering team input and the impact on relationships.',
+                    teamDynamics: 'You foster inclusive, harmonious teams where everyone feels heard and valued.'
+                },
+                'IC': {
+                    title: 'The Analytical Influencer',
+                    traits: ['Persuasive', 'Detail-oriented', 'Thorough', 'Convincing'],
+                    description: 'You influence others through well-researched facts and compelling, data-driven presentations.',
+                    strengths: ['Fact-based influence', 'Thorough analysis', 'Quality communication', 'Credible leadership'],
+                    challenges: ['May over-analyze', 'Could be slow to decide', 'Might overwhelm with details', 'May lack emotional appeal'],
+                    communication: 'Detailed and persuasive, you communicate with facts and logic, building credible arguments.',
+                    decisionMaking: 'You make well-researched decisions based on thorough analysis and factual evidence.',
+                    teamDynamics: 'You lead through expertise and credibility, creating informed and quality-focused teams.'
+                },
+                'SD': {
+                    title: 'The Supportive Director',
+                    traits: ['Steady', 'Reliable', 'Patient', 'Determined'],
+                    description: 'You provide consistent leadership while ensuring team stability and gradual, sustainable progress.',
+                    strengths: ['Consistent leadership', 'Team stability', 'Reliable performance', 'Sustainable growth'],
+                    challenges: ['May resist change', 'Could be slow to act', 'Might avoid risks', 'May lack urgency'],
+                    communication: 'Steady and reliable, you communicate with consistency and build trust through dependability.',
+                    decisionMaking: 'You make careful, considered decisions that prioritize stability and long-term success.',
+                    teamDynamics: 'You create stable, predictable environments where teams can work steadily toward goals.'
+                },
+                'SI': {
+                    title: 'The Harmonious Facilitator',
+                    traits: ['Collaborative', 'Diplomatic', 'Encouraging', 'Inclusive'],
+                    description: 'You build consensus and create harmony while gently guiding teams toward shared objectives.',
+                    strengths: ['Consensus building', 'Team harmony', 'Inclusive leadership', 'Diplomatic approach'],
+                    challenges: ['May avoid tough decisions', 'Could be slow to act', 'Might compromise too much', 'May lack assertiveness'],
+                    communication: 'Diplomatic and inclusive, you communicate with tact and ensure everyone feels heard.',
+                    decisionMaking: 'You make collaborative decisions that build consensus and maintain team harmony.',
+                    teamDynamics: 'You facilitate cooperation and create inclusive environments where all voices are valued.'
+                },
+                'SC': {
+                    title: 'The Careful Supporter',
+                    traits: ['Careful', 'Loyal', 'Stable', 'Methodical'],
+                    description: 'You provide steady, reliable leadership with attention to detail and genuine concern for team welfare.',
+                    strengths: ['Careful planning', 'Team loyalty', 'Quality focus', 'Supportive leadership'],
+                    challenges: ['May be overly cautious', 'Could resist change', 'Might avoid risks', 'May be slow to decide'],
+                    communication: 'Careful and supportive, you communicate with consideration and attention to detail.',
+                    decisionMaking: 'You make methodical decisions that consider all factors and minimize risks.',
+                    teamDynamics: 'You create careful, supportive environments focused on quality and team welfare.'
+                },
+                'CD': {
+                    title: 'The Systematic Achiever',
+                    traits: ['Organized', 'Determined', 'Quality-focused', 'Efficient'],
+                    description: 'You drive results through systematic approaches and high standards of performance and quality.',
+                    strengths: ['Systematic approach', 'Quality results', 'Efficient processes', 'High standards'],
+                    challenges: ['May be inflexible', 'Could be overly critical', 'Might resist innovation', 'May create pressure'],
+                    communication: 'Systematic and clear, you communicate with precision and focus on quality outcomes.',
+                    decisionMaking: 'You make structured decisions based on analysis, standards, and systematic evaluation.',
+                    teamDynamics: 'You create organized, efficient teams focused on quality and systematic achievement.'
+                },
+                'CI': {
+                    title: 'The Analytical Communicator',
+                    traits: ['Precise', 'Informative', 'Thorough', 'Diplomatic'],
+                    description: 'You lead through expertise and clear communication of well-researched information and strategies.',
+                    strengths: ['Expert knowledge', 'Clear communication', 'Thorough analysis', 'Credible influence'],
+                    challenges: ['May over-complicate', 'Could be slow to decide', 'Might lack emotional connection', 'May overwhelm with data'],
+                    communication: 'Precise and informative, you communicate complex information clearly and build understanding.',
+                    decisionMaking: 'You make informed decisions based on thorough research and expert analysis.',
+                    teamDynamics: 'You lead through knowledge and create learning-focused, analytical teams.'
+                },
+                'CS': {
+                    title: 'The Quality Guardian',
+                    traits: ['Methodical', 'Supportive', 'Precise', 'Reliable'],
+                    description: 'You ensure high standards while providing steady support and maintaining team stability and quality.',
+                    strengths: ['Quality assurance', 'Team support', 'Methodical approach', 'Reliable leadership'],
+                    challenges: ['May be overly cautious', 'Could resist change', 'Might avoid confrontation', 'May be slow to innovate'],
+                    communication: 'Methodical and supportive, you communicate with care and attention to accuracy.',
+                    decisionMaking: 'You make careful decisions that balance quality requirements with team needs.',
+                    teamDynamics: 'You create stable, quality-focused teams where standards are maintained and people are supported.'
+                }
+            });
+
+            // Pure functions for data manipulation
+            const createEmptyScores = () => ({
+                D: { most: 0, least: 0 },
+                I: { most: 0, least: 0 },
+                S: { most: 0, least: 0 },
+                C: { most: 0, least: 0 }
+            });
+
+            const calculateScores = (answers) => {
+                return answers.reduce((scores, answer) => {
+                    const newScores = { ...scores };
+                    
+                    if (answer.most) {
+                        newScores[answer.most.type].most++;
+                    }
+                    if (answer.least) {
+                        newScores[answer.least.type].least++;
+                    }
+                    
+                    return newScores;
+                }, createEmptyScores());
+            };
+
+            const calculateFinalScores = (rawScores) => {
+                return Object.keys(rawScores).reduce((final, type) => {
+                    final[type] = rawScores[type].most - rawScores[type].least;
+                    return final;
+                }, {});
+            };
+
+            const getDominantTypes = (finalScores) => {
+                const sortedTypes = Object.entries(finalScores)
+                    .sort(([,a], [,b]) => b - a)
+                    .map(([type]) => type);
+                
+                return {
+                    primary: sortedTypes[0],
+                    secondary: sortedTypes[1],
+                    combination: sortedTypes[0] + sortedTypes[1]
+                };
+            };
+
+            const getLeadershipProfile = (combination) => {
+                return LEADERSHIP_PROFILES[combination] || LEADERSHIP_PROFILES['DI'];
+            };
+
+            return {
+                DISC_QUESTIONS,
+                LEADERSHIP_PROFILES,
+                createEmptyScores,
+                calculateScores,
+                calculateFinalScores,
+                getDominantTypes,
+                getLeadershipProfile
+            };
+        })();
+
+        // Utility Module - Pure utility functions
+        const UtilityModule = (() => {
+            const generateRandomCode = (length = 8) => {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                return Array.from({ length }, () => 
+                    chars.charAt(Math.floor(Math.random() * chars.length))
+                ).join('');
+            };
+
+            const formatDate = (date = new Date()) => {
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            };
+
+            const validateInput = (value, type = 'text') => {
+                if (!value || value.trim() === '') return false;
+                if (type === 'name' && value.trim().length < 2) return false;
+                if (type === 'code' && value.length !== 8) return false;
+                return true;
+            };
+
+            const showSection = (sectionId) => {
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId).classList.add('active');
+            };
+
+            return {
+                generateRandomCode,
+                formatDate,
+                validateInput,
+                showSection
+            };
+        })();
+
+        // State Management Module - Immutable state management
+        const StateModule = (() => {
+            let state = {
+                answers: [],
+                participant: null,
+                accessCodes: [],
+                participants: [],
+                branding: {
+                    companyName: 'CHROMIUM RESOURCES',
+                    tagline: 'Professional Leadership Development Solutions',
+                    logoText: 'CR',
+                    logoUrl: null,
+                    backgroundUrl: null,
+                    primaryColor: '#2c3e50',
+                    secondaryColor: '#3498db',
+                    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                    companyInfo: '',
+                    companyNameFontSize: '24',
+                    taglineFontSize: '16'
+                },
+                reportSettings: {
+                    title: 'DISC LEADERSHIP ASSESSMENT',
+                    subtitle: 'Professional Development Report',
+                    logoSize: 'medium',
+                    backgroundOpacity: '0.6',
+                    backgroundImageSize: 'cover',
+                    backgroundPosition: 'center',
+                    footerText: 'Confidential Leadership Development Report',
+                    pdfBackgroundColor: '#f8f9fa',
+                    pageHeaderColor: '#3498db'
+                },
+                adminLoggedIn: false
+            };
+
+            const getState = () => ({ ...state });
+
+            const setState = (updates) => {
+                state = { ...state, ...updates };
+                saveToStorage();
+            };
+
+            const updateAnswer = (questionIndex, answerData) => {
+                const newAnswers = [...state.answers];
+                newAnswers[questionIndex] = { ...answerData };
+                setState({ answers: newAnswers });
+            };
+
+            const addParticipant = (participantData) => {
+                const newParticipants = [...state.participants, participantData];
+                setState({ participants: newParticipants });
+            };
+
+            const resetAssessment = () => {
+                setState({
+                    answers: [],
+                    participant: null
+                });
+            };
+
+            const saveToStorage = () => {
+                localStorage.setItem('discAssessmentState', JSON.stringify({
+                    accessCodes: state.accessCodes,
+                    participants: state.participants,
+                    branding: state.branding,
+                    reportSettings: state.reportSettings
+                }));
+            };
+
+            const loadFromStorage = () => {
+                const saved = localStorage.getItem('discAssessmentState');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    setState({
+                        accessCodes: data.accessCodes || [],
+                        participants: data.participants || [],
+                        branding: { ...state.branding, ...data.branding },
+                        reportSettings: { ...state.reportSettings, ...data.reportSettings }
+                    });
+                }
+            };
+
+            return {
+                getState,
+                setState,
+                updateAnswer,
+                addParticipant,
+                resetAssessment,
+                loadFromStorage
+            };
+        })();
+
+        // Admin Module - Administrative functions
+        const AdminModule = (() => {
+            const ADMIN_CREDENTIALS = {
+                username: 'admin',
+                password: 'disc2024admin'
+            };
+
+            const togglePanel = () => {
+                const currentState = StateModule.getState();
+                
+                if (!currentState.adminLoggedIn) {
+                    const username = prompt('Admin Username:');
+                    const password = prompt('Admin Password:');
+                    
+                    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                        StateModule.setState({ adminLoggedIn: true });
+                        UtilityModule.showSection('adminSection');
+                        updateBrandingInputs();
+                        updateReportSettingsInputs();
+                        displayAccessCodes();
+                        displayParticipants();
+                    } else {
+                        alert('Invalid admin credentials');
+                    }
+                } else {
+                    StateModule.setState({ adminLoggedIn: false });
+                    UtilityModule.showSection('loginSection');
+                }
+            };
+
+            const uploadLogo = () => {
+                const fileInput = document.getElementById('logoUpload');
+                const file = fileInput.files[0];
+                
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const branding = { ...StateModule.getState().branding };
+                        branding.logoUrl = e.target.result;
+                        StateModule.setState({ branding });
+                        applyBranding();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const uploadBackground = () => {
+                const fileInput = document.getElementById('backgroundUpload');
+                const file = fileInput.files[0];
+                
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const branding = { ...StateModule.getState().branding };
+                        branding.backgroundUrl = e.target.result;
+                        StateModule.setState({ branding });
+                        applyBranding();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const generateAccessCodes = () => {
+                const newCodes = Array.from({ length: 180 }, () => 
+                    UtilityModule.generateRandomCode()
+                );
+                
+                StateModule.setState({ accessCodes: newCodes });
+                displayAccessCodes();
+            };
+
+            const displayAccessCodes = () => {
+                const { accessCodes } = StateModule.getState();
+                const container = document.getElementById('accessCodesContainer');
+                const countElement = document.getElementById('codeCount');
+                
+                container.innerHTML = '';
+                countElement.textContent = `${accessCodes.length} codes available`;
+                
+                accessCodes.forEach(code => {
+                    const codeDiv = document.createElement('div');
+                    codeDiv.className = 'access-code-item';
+                    codeDiv.textContent = code;
+                    container.appendChild(codeDiv);
+                });
+            };
+
+            const displayParticipants = () => {
+                const { participants } = StateModule.getState();
+                const tbody = document.getElementById('participantsTableBody');
+                
+                if (participants.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-light);">No completed assessments yet</td></tr>';
+                    updateParticipantSelection();
+                    return;
+                }
+                
+                tbody.innerHTML = participants.map(participant => `
+                    <tr>
+                        <td>${participant.name}</td>
+                        <td>${participant.role}</td>
+                        <td>${participant.date}</td>
+                        <td>${participant.profile.title}</td>
+                        <td>
+                            <button class="report-btn" onclick="AdminModule.generateReport('${participant.id}')" style="margin-right: 5px;">
+                                📄 Report
+                            </button>
+                            <button class="report-btn" onclick="AdminModule.deleteParticipant('${participant.id}')" style="background: var(--accent-color);">
+                                🗑️ Delete
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                updateParticipantSelection();
+            };
+
+            const updateParticipantSelection = () => {
+                const { participants } = StateModule.getState();
+                const container = document.getElementById('participantSelectionContainer');
+                const selectedCount = document.getElementById('selectedCount');
+                const teamReportBtn = document.getElementById('teamReportBtn');
+                
+                if (participants.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text-light); text-align: center; margin: 0;">No participants available for selection</p>';
+                    selectedCount.textContent = '0 participants selected (minimum 3 required)';
+                    teamReportBtn.disabled = true;
+                    return;
+                }
+                
+                // Create checkboxes for each participant
+                container.innerHTML = participants.map(participant => `
+                    <div style="display: flex; align-items: center; margin-bottom: 10px; padding: 8px; border-radius: 4px; background: #f8f9fa;">
+                        <input type="checkbox" 
+                               id="participant_${participant.id}" 
+                               value="${participant.id}"
+                               onchange="AdminModule.updateSelectedCount()"
+                               style="margin-right: 10px; transform: scale(1.2);">
+                        <label for="participant_${participant.id}" style="flex: 1; cursor: pointer; margin: 0;">
+                            <strong>${participant.name}</strong> - ${participant.role} (${participant.profile.title})
+                        </label>
+                    </div>
+                `).join('');
+                
+                updateSelectedCount();
+            };
+
+            const updateSelectedCount = () => {
+                const checkboxes = document.querySelectorAll('#participantSelectionContainer input[type="checkbox"]');
+                const selectedCount = document.getElementById('selectedCount');
+                const teamReportBtn = document.getElementById('teamReportBtn');
+                
+                const selected = Array.from(checkboxes).filter(cb => cb.checked);
+                const count = selected.length;
+                
+                selectedCount.textContent = `${count} participants selected (minimum 3 required)`;
+                teamReportBtn.disabled = count < 3;
+                
+                if (count >= 3) {
+                    selectedCount.style.color = '#27ae60';
+                } else {
+                    selectedCount.style.color = '#0c5460';
+                }
+            };
+
+            const selectAllParticipants = () => {
+                const checkboxes = document.querySelectorAll('#participantSelectionContainer input[type="checkbox"]');
+                checkboxes.forEach(cb => cb.checked = true);
+                updateSelectedCount();
+            };
+
+            const clearAllParticipants = () => {
+                const checkboxes = document.querySelectorAll('#participantSelectionContainer input[type="checkbox"]');
+                checkboxes.forEach(cb => cb.checked = false);
+                updateSelectedCount();
+            };
+
+            const generateSelectedTeamReport = () => {
+                const { participants } = StateModule.getState();
+                const checkboxes = document.querySelectorAll('#participantSelectionContainer input[type="checkbox"]:checked');
+                
+                if (checkboxes.length < 3) {
+                    alert('Please select at least 3 participants for the team report.');
+                    return;
+                }
+                
+                const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+                const selectedParticipants = participants.filter(p => selectedIds.includes(p.id));
+                
+                // Generate team report with selected participants
+                ReportModule.generateTeamPDF(selectedParticipants);
+            };
+
+            const generateReport = (participantId) => {
+                const { participants } = StateModule.getState();
+                const participant = participants.find(p => p.id === participantId);
+                
+                if (!participant) {
+                    alert('Participant not found');
+                    return;
+                }
+                
+                // Generate comprehensive PDF report
+                ReportModule.generatePDF(participant);
+            };
+
+            const deleteParticipant = (participantId) => {
+                if (!confirm('Are you sure you want to delete this participant and their assessment data? This action cannot be undone.')) {
+                    return;
+                }
+                
+                const { participants } = StateModule.getState();
+                const updatedParticipants = participants.filter(p => p.id !== participantId);
+                StateModule.setState({ participants: updatedParticipants });
+                displayParticipants();
+                
+                alert('Participant data deleted successfully.');
+            };
+
+            const generateTeamReport = () => {
+                const { participants } = StateModule.getState();
+                
+                if (participants.length < 3) {
+                    alert('Team report requires at least 3 completed assessments.');
+                    return;
+                }
+                
+                // Generate comprehensive team management report
+                ReportModule.generateTeamPDF(participants);
+            };
+
+            const updateBranding = () => {
+                const branding = {
+                    ...StateModule.getState().branding,
+                    companyName: document.getElementById('adminCompanyName').value,
+                    tagline: document.getElementById('adminTagline').value,
+                    companyInfo: document.getElementById('companyInfo').value,
+                    companyNameFontSize: document.getElementById('companyNameFontSize').value,
+                    taglineFontSize: document.getElementById('taglineFontSize').value
+                };
+                
+                StateModule.setState({ branding });
+                applyBranding();
+            };
+
+            const saveAllSettings = () => {
+                // Update all settings
+                updateBranding();
+                updateColors();
+                updateFont();
+                updateReportSettings();
+                
+                // Show save confirmation
+                const saveStatus = document.getElementById('saveStatus');
+                saveStatus.textContent = '✅ Settings Saved Successfully!';
+                saveStatus.style.color = 'var(--success-color)';
+                
+                setTimeout(() => {
+                    saveStatus.textContent = '';
+                }, 3000);
+            };
+
+            const updateColors = () => {
+                const branding = {
+                    ...StateModule.getState().branding,
+                    primaryColor: document.getElementById('primaryColor').value,
+                    secondaryColor: document.getElementById('secondaryColor').value
+                };
+                
+                StateModule.setState({ branding });
+                applyBranding();
+            };
+
+            const updateFont = () => {
+                const branding = {
+                    ...StateModule.getState().branding,
+                    fontFamily: document.getElementById('fontFamily').value
+                };
+                
+                StateModule.setState({ branding });
+                applyBranding();
+            };
+
+            const updateReportSettings = () => {
+                const reportSettings = {
+                    ...StateModule.getState().reportSettings,
+                    title: document.getElementById('reportTitle').value,
+                    subtitle: document.getElementById('reportSubtitle').value,
+                    logoSize: document.getElementById('logoSize').value,
+                    backgroundOpacity: document.getElementById('backgroundOpacity').value,
+                    backgroundImageSize: document.getElementById('backgroundImageSize').value,
+                    backgroundPosition: document.getElementById('backgroundPosition').value,
+                    footerText: document.getElementById('reportFooter').value,
+                    pdfBackgroundColor: document.getElementById('pdfBackgroundColor').value,
+                    pageHeaderColor: document.getElementById('pageHeaderColor').value
+                };
+                
+                StateModule.setState({ reportSettings });
+            };
+
+            const updateBrandingInputs = () => {
+                const { branding } = StateModule.getState();
+                document.getElementById('adminCompanyName').value = branding.companyName;
+                document.getElementById('adminTagline').value = branding.tagline;
+                document.getElementById('companyInfo').value = branding.companyInfo || '';
+                document.getElementById('primaryColor').value = branding.primaryColor;
+                document.getElementById('secondaryColor').value = branding.secondaryColor;
+                document.getElementById('fontFamily').value = branding.fontFamily;
+                document.getElementById('companyNameFontSize').value = branding.companyNameFontSize || '24';
+                document.getElementById('taglineFontSize').value = branding.taglineFontSize || '16';
+            };
+
+            const updateReportSettingsInputs = () => {
+                const { reportSettings } = StateModule.getState();
+                document.getElementById('reportTitle').value = reportSettings.title;
+                document.getElementById('reportSubtitle').value = reportSettings.subtitle;
+                document.getElementById('logoSize').value = reportSettings.logoSize;
+                document.getElementById('backgroundOpacity').value = reportSettings.backgroundOpacity;
+                document.getElementById('backgroundImageSize').value = reportSettings.backgroundImageSize || 'cover';
+                document.getElementById('backgroundPosition').value = reportSettings.backgroundPosition || 'center';
+                document.getElementById('reportFooter').value = reportSettings.footerText;
+                document.getElementById('pdfBackgroundColor').value = reportSettings.pdfBackgroundColor || '#f8f9fa';
+                document.getElementById('pageHeaderColor').value = reportSettings.pageHeaderColor || '#3498db';
+            };
+
+            const applyBranding = () => {
+                const { branding } = StateModule.getState();
+                
+                // Update text content and font sizes
+                const companyNameElement = document.getElementById('companyName');
+                const taglineElement = document.getElementById('companyTagline');
+                
+                companyNameElement.textContent = branding.companyName;
+                taglineElement.textContent = branding.tagline;
+                
+                // Apply font sizes
+                companyNameElement.style.fontSize = branding.companyNameFontSize + 'px';
+                taglineElement.style.fontSize = branding.taglineFontSize + 'px';
+                
+                // Update logo
+                const logoElement = document.getElementById('companyLogo');
+                if (branding.logoUrl) {
+                    logoElement.style.backgroundImage = `url(${branding.logoUrl})`;
+                    logoElement.textContent = '';
+                } else {
+                    logoElement.style.backgroundImage = 'none';
+                    logoElement.textContent = branding.logoText;
+                }
+                
+                // Update background
+                const headerElement = document.getElementById('headerSection');
+                if (branding.backgroundUrl) {
+                    headerElement.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${branding.backgroundUrl})`;
+                    headerElement.style.backgroundSize = 'cover';
+                    headerElement.style.backgroundPosition = 'center';
+                }
+                
+                // Update CSS variables
+                document.documentElement.style.setProperty('--primary-color', branding.primaryColor);
+                document.documentElement.style.setProperty('--secondary-color', branding.secondaryColor);
+                document.documentElement.style.setProperty('--custom-font', branding.fontFamily);
+            };
+
+            return {
+                togglePanel,
+                uploadLogo,
+                uploadBackground,
+                generateAccessCodes,
+                generateReport,
+                deleteParticipant,
+                generateTeamReport,
+                updateBranding,
+                updateColors,
+                updateFont,
+                updateReportSettings,
+                saveAllSettings,
+                applyBranding,
+                selectAllParticipants,
+                clearAllParticipants,
+                updateSelectedCount,
+                generateSelectedTeamReport
+            };
+        })();
+
+        // Assessment Module - Core assessment functionality
+        const AssessmentModule = (() => {
+            const startAssessment = () => {
+                const name = document.getElementById('participantName').value.trim();
+                const role = document.getElementById('jobRole').value.trim();
+                const code = document.getElementById('accessCode').value.trim().toUpperCase();
+                
+                if (!UtilityModule.validateInput(name, 'name')) {
+                    alert('Please enter your full name.');
+                    return;
+                }
+                
+                if (!UtilityModule.validateInput(role)) {
+                    alert('Please enter your job role.');
+                    return;
+                }
+                
+                if (!UtilityModule.validateInput(code, 'code')) {
+                    alert('Please enter a valid 8-character access code.');
+                    return;
+                }
+                
+                const { accessCodes } = StateModule.getState();
+                if (!accessCodes.includes(code)) {
+                    alert('Invalid access code. Please contact your administrator.');
+                    return;
+                }
+                
+                // Remove used access code and set participant
+                const remainingCodes = accessCodes.filter(c => c !== code);
+                StateModule.setState({
+                    accessCodes: remainingCodes,
+                    participant: { 
+                        id: Date.now().toString(),
+                        name, 
+                        role, 
+                        date: UtilityModule.formatDate() 
+                    },
+                    answers: []
+                });
+                
+                UtilityModule.showSection('assessmentSection');
+                renderQuestions();
+            };
+
+            const renderQuestions = () => {
+                const container = document.getElementById('questionsContainer');
+                container.innerHTML = '';
+                
+                DataModule.DISC_QUESTIONS.forEach((question, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question-card';
+                    questionDiv.innerHTML = `
+                        <div class="question-header">
+                            <div class="question-number">${index + 1}</div>
+                            <div class="question-text">In work situations...</div>
+                        </div>
+                        
+                        <div class="choices-container">
+                            ${question.choices.map((choice, choiceIndex) => `
+                                <div class="choice-item" data-question="${index}" data-choice="${choiceIndex}">
+                                    <div class="choice-letter">${String.fromCharCode(65 + choiceIndex)}</div>
+                                    <div class="choice-text">${choice.text}</div>
+                                    <div class="selection-buttons">
+                                        <button class="selection-btn most-btn" onclick="AssessmentModule.selectChoice(${index}, ${choiceIndex}, 'most')">
+                                            MOST
+                                        </button>
+                                        <button class="selection-btn least-btn" onclick="AssessmentModule.selectChoice(${index}, ${choiceIndex}, 'least')">
+                                            LEAST
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    
+                    container.appendChild(questionDiv);
+                });
+                
+                checkSubmitButton();
+            };
+
+            const selectChoice = (questionIndex, choiceIndex, type) => {
+                const question = DataModule.DISC_QUESTIONS[questionIndex];
+                const choice = question.choices[choiceIndex];
+                
+                // Get current answer for this question
+                const { answers } = StateModule.getState();
+                const currentAnswer = answers[questionIndex] || {};
+                
+                // Update the answer
+                const newAnswer = { ...currentAnswer };
+                newAnswer[type] = choice;
+                
+                // If selecting the same choice for both most and least, clear the other
+                if (currentAnswer.most && currentAnswer.least && 
+                    currentAnswer.most.text === choice.text && type === 'least') {
+                    delete newAnswer.most;
+                } else if (currentAnswer.most && currentAnswer.least && 
+                           currentAnswer.least.text === choice.text && type === 'most') {
+                    delete newAnswer.least;
+                }
+                
+                StateModule.updateAnswer(questionIndex, newAnswer);
+                updateQuestionUI(questionIndex);
+                checkSubmitButton();
+            };
+
+            const updateQuestionUI = (questionIndex) => {
+                const { answers } = StateModule.getState();
+                const answer = answers[questionIndex];
+                
+                // Clear all selections for this question
+                const questionCard = document.querySelectorAll('.question-card')[questionIndex];
+                const choices = questionCard.querySelectorAll('.choice-item');
+                const buttons = questionCard.querySelectorAll('.selection-btn');
+                
+                choices.forEach(choice => {
+                    choice.classList.remove('selected-most', 'selected-least');
+                });
+                
+                buttons.forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                
+                if (answer) {
+                    // Highlight selected choices
+                    if (answer.most) {
+                        const mostChoiceIndex = DataModule.DISC_QUESTIONS[questionIndex].choices.findIndex(
+                            c => c.text === answer.most.text
+                        );
+                        if (mostChoiceIndex >= 0) {
+                            choices[mostChoiceIndex].classList.add('selected-most');
+                            choices[mostChoiceIndex].querySelector('.most-btn').classList.add('selected');
+                        }
+                    }
+                    
+                    if (answer.least) {
+                        const leastChoiceIndex = DataModule.DISC_QUESTIONS[questionIndex].choices.findIndex(
+                            c => c.text === answer.least.text
+                        );
+                        if (leastChoiceIndex >= 0) {
+                            choices[leastChoiceIndex].classList.add('selected-least');
+                            choices[leastChoiceIndex].querySelector('.least-btn').classList.add('selected');
+                        }
+                    }
+                }
+            };
+
+            const checkSubmitButton = () => {
+                const { answers } = StateModule.getState();
+                const submitBtn = document.getElementById('submitAssessment');
+                
+                // Check if all questions have both most and least selections
+                const allComplete = DataModule.DISC_QUESTIONS.every((_, index) => {
+                    const answer = answers[index];
+                    return answer && answer.most && answer.least;
+                });
+                
+                submitBtn.disabled = !allComplete;
+            };
+
+            const submitAssessment = () => {
+                const { answers, participant } = StateModule.getState();
+                
+                // Calculate results
+                const rawScores = DataModule.calculateScores(answers);
+                const finalScores = DataModule.calculateFinalScores(rawScores);
+                const dominantTypes = DataModule.getDominantTypes(finalScores);
+                const profile = DataModule.getLeadershipProfile(dominantTypes.combination);
+                
+                // Store participant with results
+                const participantWithResults = {
+                    ...participant,
+                    answers,
+                    rawScores,
+                    finalScores,
+                    dominantTypes,
+                    profile
+                };
+                
+                StateModule.addParticipant(participantWithResults);
+                UtilityModule.showSection('completionSection');
+            };
+
+            const restart = () => {
+                StateModule.resetAssessment();
+                UtilityModule.showSection('loginSection');
+                
+                // Clear form
+                document.getElementById('participantName').value = '';
+                document.getElementById('jobRole').value = '';
+                document.getElementById('accessCode').value = '';
+            };
+
+            return {
+                startAssessment,
+                selectChoice,
+                submitAssessment,
+                restart
+            };
+        })();
+
+        // Report Generation Module - PDF report creation (Admin only)
+        const ReportModule = (() => {
+            // Helper function to convert hex color to RGB
+            const hexToRgb = (hex) => {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : { r: 248, g: 249, b: 250 };
+            };
+            const generatePDF = (participant) => {
+                try {
+                    const { branding, reportSettings } = StateModule.getState();
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    
+                    // Cover Page with customizable logo and background
+                    generateCoverPage(doc, participant, branding, reportSettings);
+                    
+                    // Introduction Page
+                    doc.addPage();
+                    generateIntroductionPage(doc);
+                    
+                    // Participant Overview
+                    doc.addPage();
+                    generateParticipantOverview(doc, participant);
+                    
+                    // DISC Graph Page
+                    doc.addPage();
+                    generateDISCGraphPage(doc, participant);
+                    
+                    // Profile Summary
+                    doc.addPage();
+                    generateProfileSummary(doc, participant);
+                    
+                    // Leadership Style
+                    doc.addPage();
+                    generateLeadershipStyle(doc, participant);
+                    
+                    // Strengths
+                    doc.addPage();
+                    generateStrengthsPage(doc, participant);
+                    
+                    // Development Areas
+                    doc.addPage();
+                    generateDevelopmentAreas(doc, participant);
+                    
+                    // Communication Style
+                    doc.addPage();
+                    generateCommunicationStyle(doc, participant);
+                    
+                    // Decision-Making Style
+                    doc.addPage();
+                    generateDecisionMakingStyle(doc, participant);
+                    
+                    // Team Dynamics
+                    doc.addPage();
+                    generateTeamDynamics(doc, participant);
+                    
+                    // Leadership Development Recommendations
+                    doc.addPage();
+                    generateDevelopmentRecommendations(doc, participant);
+                    
+                    // Closing Page
+                    doc.addPage();
+                    generateClosingPage(doc, branding);
+                    
+                    // Save PDF
+                    const fileName = `DISC_Leadership_Report_${participant.name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+                    doc.save(fileName);
+                    
+                    alert('Comprehensive 14-page DISC Leadership Report with custom branding generated successfully!');
+                    
+                } catch (error) {
+                    console.error('PDF Generation Error:', error);
+                    alert('There was an error generating the report. Please try again.');
+                }
+            };
+
+            const generateCoverPage = (doc, participant, branding, reportSettings) => {
+                // Professional Background Setup
+                if (branding.backgroundUrl) {
+                    try {
+                        // Calculate background dimensions based on settings
+                        let bgWidth = 210, bgHeight = 297, bgX = 0, bgY = 0;
+                        
+                        if (reportSettings.backgroundImageSize !== 'cover') {
+                            if (reportSettings.backgroundImageSize === 'contain') {
+                                bgWidth = 180; bgHeight = 250; bgX = 15; bgY = 23;
+                            } else if (reportSettings.backgroundImageSize.includes('%')) {
+                                const percentage = parseFloat(reportSettings.backgroundImageSize) / 100;
+                                bgWidth = 210 * percentage;
+                                bgHeight = 297 * percentage;
+                                bgX = (210 - bgWidth) / 2;
+                                bgY = (297 - bgHeight) / 2;
+                            }
+                        }
+                        
+                        // Add background image with custom sizing
+                        doc.addImage(branding.backgroundUrl, 'JPEG', bgX, bgY, bgWidth, bgHeight);
+                        
+                        // Add professional overlay for text readability
+                        doc.setFillColor(0, 0, 0);
+                        doc.setGState(new doc.GState({opacity: parseFloat(reportSettings.backgroundOpacity)}));
+                        doc.rect(0, 0, 210, 297, 'F');
+                        doc.setGState(new doc.GState({opacity: 1}));
+                    } catch (error) {
+                        console.log('Background image could not be added to PDF');
+                    }
+                }
+                
+                // Professional Header Section
+                if (!branding.backgroundUrl) {
+                    // Elegant gradient header
+                    doc.setFillColor(44, 62, 80);
+                    doc.rect(0, 0, 210, 90, 'F');
+                    
+                    // Add subtle accent line
+                    doc.setFillColor(52, 152, 219);
+                    doc.rect(0, 85, 210, 5, 'F');
+                }
+                
+                // Enhanced Logo Positioning and Sizing
+                const logoSizes = {
+                    small: { width: 30, height: 30 },
+                    medium: { width: 40, height: 40 },
+                    large: { width: 60, height: 60 },
+                    xlarge: { width: 80, height: 80 }
+                };
+                const logoSize = logoSizes[reportSettings.logoSize] || logoSizes.medium;
+                
+                // Professional logo placement with shadow effect
+                if (branding.logoUrl) {
+                    try {
+                        // Add subtle shadow behind logo
+                        doc.setFillColor(0, 0, 0);
+                        doc.setGState(new doc.GState({opacity: 0.2}));
+                        doc.circle(22 + logoSize.width/2, 17 + logoSize.height/2, logoSize.width/2 + 2, 'F');
+                        doc.setGState(new doc.GState({opacity: 1}));
+                        
+                        // Add company logo
+                        doc.addImage(branding.logoUrl, 'PNG', 20, 15, logoSize.width, logoSize.height);
+                    } catch (error) {
+                        console.log('Logo could not be added to PDF');
+                        // Professional fallback logo
+                        doc.setFillColor(52, 152, 219);
+                        doc.circle(20 + logoSize.width/2, 15 + logoSize.height/2, logoSize.width/2, 'F');
+                        doc.setTextColor(255, 255, 255);
+                        doc.setFontSize(logoSize.width/2.5);
+                        doc.setFont(undefined, 'bold');
+                        doc.text(branding.logoText || 'LOGO', 20 + logoSize.width/3, 15 + logoSize.height/1.4);
+                    }
+                } else {
+                    // Enhanced text-based logo
+                    doc.setFillColor(52, 152, 219);
+                    doc.circle(20 + logoSize.width/2, 15 + logoSize.height/2, logoSize.width/2, 'F');
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(logoSize.width/2.5);
+                    doc.setFont(undefined, 'bold');
+                    doc.text(branding.logoText || 'CR', 20 + logoSize.width/3, 15 + logoSize.height/1.4);
+                }
+                
+                // Professional Company Branding with Custom Font Sizes
+                const companyNameFontSize = parseInt(branding.companyNameFontSize) || 24;
+                const taglineFontSize = parseInt(branding.taglineFontSize) || 14;
+                
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(companyNameFontSize);
+                doc.setFont(undefined, 'bold');
+                doc.text(branding.companyName, 20 + logoSize.width + 15, 30);
+                
+                doc.setFontSize(taglineFontSize);
+                doc.setFont(undefined, 'normal');
+                doc.text(branding.tagline, 20 + logoSize.width + 15, 50);
+                
+                // Professional Title Section with Enhanced Typography
+                const titleColor = branding.backgroundUrl ? [255, 255, 255] : [44, 62, 80];
+                doc.setTextColor(...titleColor);
+                
+                // Main title with professional spacing
+                doc.setFontSize(36);
+                doc.setFont(undefined, 'bold');
+                const titleLines = doc.splitTextToSize(reportSettings.title, 170);
+                let titleY = 120;
+                titleLines.forEach(line => {
+                    doc.text(line, 20, titleY);
+                    titleY += 22;
+                });
+                
+                // Subtitle with elegant styling
+                doc.setFontSize(18);
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(titleColor[0] * 0.8, titleColor[1] * 0.8, titleColor[2] * 0.8);
+                doc.text(reportSettings.subtitle, 20, titleY + 5);
+                
+                // Professional Participant Information Card
+                doc.setFillColor(255, 255, 255);
+                doc.setDrawColor(220, 220, 220);
+                doc.setLineWidth(0.5);
+                doc.roundedRect(20, 180, 170, 70, 8, 8, 'FD');
+                
+                // Add subtle inner shadow effect
+                doc.setDrawColor(240, 240, 240);
+                doc.roundedRect(22, 182, 166, 66, 6, 6, 'D');
+                
+                // Participant information with professional typography
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('PREPARED FOR:', 30, 195);
+                
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(52, 152, 219);
+                doc.text(participant.name.toUpperCase(), 30, 210);
+                
+                doc.setTextColor(80, 80, 80);
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                doc.text(`Position: ${participant.role}`, 30, 225);
+                doc.text(`Assessment Date: ${participant.date}`, 30, 235);
+                doc.text(`Report Type: Professional DISC Leadership Analysis`, 30, 245);
+                
+                // Enhanced Company Information Section
+                if (branding.companyInfo) {
+                    doc.setFillColor(248, 249, 250);
+                    doc.setDrawColor(230, 230, 230);
+                    doc.roundedRect(20, 260, 170, 25, 5, 5, 'FD');
+                    
+                    doc.setTextColor(70, 70, 70);
+                    doc.setFontSize(9);
+                    doc.setFont(undefined, 'normal');
+                    const companyInfoLines = doc.splitTextToSize(branding.companyInfo, 160);
+                    let yPos = 270;
+                    companyInfoLines.slice(0, 2).forEach(line => {
+                        doc.text(line, 25, yPos);
+                        yPos += 6;
+                    });
+                }
+                
+                // Professional Footer with Branding
+                const footerY = 290;
+                doc.setTextColor(branding.backgroundUrl ? 200 : 120, branding.backgroundUrl ? 200 : 120, branding.backgroundUrl ? 200 : 120);
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'italic');
+                doc.text(reportSettings.footerText, 20, footerY);
+                
+                // Professional timestamp
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                const timestamp = `Generated: ${new Date().toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })} at ${new Date().toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                })}`;
+                doc.text(timestamp, 210 - doc.getTextWidth(timestamp) - 20, footerY);
+                
+                // Add professional border accent
+                if (!branding.backgroundUrl) {
+                    doc.setDrawColor(52, 152, 219);
+                    doc.setLineWidth(2);
+                    doc.line(20, 295, 190, 295);
+                }
+            };
+
+            // Helper function to add professional page header with customizable color
+            const addPageHeader = (doc, reportSettings, pageNumber) => {
+                // Add professional page background
+                const bgColor = hexToRgb(reportSettings.pdfBackgroundColor || '#f8f9fa');
+                doc.setFillColor(bgColor.r, bgColor.g, bgColor.b);
+                doc.rect(0, 0, 210, 297, 'F');
+                
+                // Add customizable header accent
+                const headerColor = hexToRgb(reportSettings.pageHeaderColor || '#3498db');
+                doc.setFillColor(headerColor.r, headerColor.g, headerColor.b);
+                doc.rect(0, 0, 210, 8, 'F');
+                
+                // Add page number
+                addPageNumber(doc, pageNumber);
+            };
+
+            const generateIntroductionPage = (doc) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 2);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Introduction to DISC & Leadership', 20, 30);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                const introText = [
+                    'The DISC assessment is a powerful tool for understanding behavioral styles and leadership approaches.',
+                    'Developed from the work of psychologist William Moulton Marston, DISC identifies four primary',
+                    'behavioral dimensions that influence how we communicate, make decisions, and lead others.',
+                    '',
+                    'D - DOMINANCE: Results-oriented, decisive, problem-solving',
+                    'I - INFLUENCE: People-oriented, enthusiastic, optimistic',
+                    'S - STEADINESS: Patient, reliable, supportive',
+                    'C - CONSCIENTIOUSNESS: Analytical, systematic, quality-focused',
+                    '',
+                    'This report analyzes your unique combination of these traits to provide insights into your',
+                    'leadership style, strengths, and development opportunities. Understanding your DISC profile',
+                    'enables you to leverage your natural strengths while developing areas for growth.',
+                    '',
+                    'Your leadership effectiveness increases when you understand not only your own style but',
+                    'also how to adapt your approach to work effectively with different personality types.',
+                    'This report provides practical strategies for enhancing your leadership impact.'
+                ];
+                
+                let yPosition = 50;
+                introText.forEach(line => {
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+            };
+
+            const generateParticipantOverview = (doc, participant) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 3);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Participant Overview', 20, 30);
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'normal');
+                doc.text(`Name: ${participant.name}`, 20, 60);
+                doc.text(`Position: ${participant.role}`, 20, 80);
+                doc.text(`Assessment Date: ${participant.date}`, 20, 100);
+                doc.text('Assessment Type: Professional DISC Leadership Evaluation', 20, 120);
+                
+                doc.setFontSize(12);
+                const overviewText = [
+                    '',
+                    'This comprehensive assessment evaluates your leadership style across four key behavioral',
+                    'dimensions. The results provide insights into your natural tendencies, preferred approaches,',
+                    'and areas for development as a leader.',
+                    '',
+                    'The assessment uses a "Most" and "Least" format to identify both your strongest',
+                    'behavioral preferences and those you tend to avoid, providing a complete picture',
+                    'of your leadership profile.'
+                ];
+                
+                let yPosition = 140;
+                overviewText.forEach(line => {
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+            };
+
+            const generateDISCGraphPage = (doc, participant) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 4);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('DISC Profile Graph', 20, 30);
+                
+                // Create a simple bar chart representation
+                const scores = participant.finalScores;
+                const maxScore = Math.max(...Object.values(scores));
+                const minScore = Math.min(...Object.values(scores));
+                
+                doc.setFontSize(14);
+                doc.text('Most vs. Least Scores', 20, 60);
+                
+                let yPos = 80;
+                Object.entries(scores).forEach(([type, score]) => {
+                    const barWidth = Math.abs(score) / Math.max(Math.abs(maxScore), Math.abs(minScore)) * 100;
+                    const color = { D: [231, 76, 60], I: [243, 156, 18], S: [39, 174, 96], C: [52, 152, 219] }[type];
+                    
+                    doc.setFillColor(...color);
+                    doc.rect(60, yPos - 5, barWidth, 10, 'F');
+                    
+                    doc.setTextColor(44, 62, 80);
+                    doc.text(`${type}: ${score}`, 20, yPos);
+                    
+                    yPos += 25;
+                });
+                
+                doc.setFontSize(12);
+                doc.text('Interpretation:', 20, 200);
+                doc.text('Positive scores indicate stronger preferences (Most selected)', 20, 215);
+                doc.text('Negative scores indicate avoided behaviors (Least selected)', 20, 230);
+            };
+
+            const generateProfileSummary = (doc, participant) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 5);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Overall Profile Summary', 20, 30);
+                
+                doc.setFontSize(14);
+                doc.text(`Primary Type: ${participant.dominantTypes.primary}`, 20, 60);
+                doc.text(`Secondary Type: ${participant.dominantTypes.secondary}`, 20, 80);
+                doc.text(`Leadership Style: ${participant.profile.title}`, 20, 100);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                
+                const description = doc.splitTextToSize(participant.profile.description, 170);
+                let yPos = 130;
+                description.forEach(line => {
+                    doc.text(line, 20, yPos);
+                    yPos += 8;
+                });
+                
+                doc.setFont(undefined, 'bold');
+                doc.text('Key Traits:', 20, yPos + 10);
+                doc.setFont(undefined, 'normal');
+                doc.text(participant.profile.traits.join(', '), 20, yPos + 25);
+            };
+
+            const generateLeadershipStyle = (doc, participant) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 6);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Leadership Style Analysis', 20, 30);
+                
+                doc.setFontSize(16);
+                doc.text(participant.profile.title, 20, 60);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                
+                const styleText = [
+                    `Your leadership style combines ${participant.dominantTypes.primary} and ${participant.dominantTypes.secondary} characteristics,`,
+                    'creating a unique approach to leading others. This combination influences how you:',
+                    '',
+                    '• Motivate and inspire team members',
+                    '• Make decisions and solve problems',
+                    '• Communicate expectations and feedback',
+                    '• Handle conflict and challenges',
+                    '• Build relationships and trust',
+                    '',
+                    'Understanding your style helps you leverage your natural strengths while',
+                    'developing greater flexibility in your leadership approach.'
+                ];
+                
+                let yPosition = 90;
+                styleText.forEach(line => {
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+                
+                const description = doc.splitTextToSize(participant.profile.description, 170);
+                yPosition += 10;
+                description.forEach(line => {
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+            };
+
+            const generateStrengthsPage = (doc, participant) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 7);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Leadership Strengths', 20, 30);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                doc.text('Your natural leadership strengths include:', 20, 60);
+                
+                let yPosition = 80;
+                participant.profile.strengths.forEach((strength, index) => {
+                    doc.setFont(undefined, 'bold');
+                    doc.text(`${index + 1}. ${strength}`, 25, yPosition);
+                    yPosition += 20;
+                });
+                
+                yPosition += 10;
+                doc.setFont(undefined, 'normal');
+                const strengthsText = [
+                    'These strengths represent your natural leadership capabilities. To maximize',
+                    'your effectiveness, focus on situations and roles that allow you to leverage',
+                    'these natural talents. Consider how you can apply these strengths to:',
+                    '',
+                    '• Enhance team performance and engagement',
+                    '• Improve organizational outcomes',
+                    '• Develop other leaders',
+                    '• Navigate challenging situations',
+                    '',
+                    'Remember that overusing strengths can sometimes become weaknesses.',
+                    'Strive for balance in your leadership approach.'
+                ];
+                
+                strengthsText.forEach(line => {
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+            };
+
+            const generateDevelopmentAreas = (doc, participant) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 8);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Potential Development Areas', 20, 30);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                doc.text('Areas for leadership growth and development:', 20, 60);
+                
+                let yPosition = 80;
+                participant.profile.challenges.forEach((challenge, index) => {
+                    doc.setFont(undefined, 'bold');
+                    doc.text(`${index + 1}. ${challenge}`, 25, yPosition);
+                    yPosition += 20;
+                });
+                
+                yPosition += 10;
+                doc.setFont(undefined, 'normal');
+                const developmentText = [
+                    'These development areas represent opportunities for growth. They are not',
+                    'weaknesses but rather areas where focused attention can enhance your',
+                    'leadership effectiveness. Consider these strategies:',
+                    '',
+                    '• Seek feedback from trusted colleagues and mentors',
+                    '• Practice new behaviors in low-risk situations',
+                    '• Find accountability partners for development goals',
+                    '• Invest in targeted training and coaching',
+                    '',
+                    'Development is an ongoing process. Focus on one or two areas at a time',
+                    'for sustainable growth.'
+                ];
+                
+                developmentText.forEach(line => {
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+            };
+
+            const generateCommunicationStyle = (doc, participant) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 9);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Communication Style', 20, 30);
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Your Natural Communication Approach:', 20, 60);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                const commText = doc.splitTextToSize(participant.profile.communication, 170);
+                let yPosition = 80;
+                commText.forEach(line => {
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+                
+                yPosition += 10;
+                const communicationGuidance = [
+                    'Effective Communication Strategies:',
+                    '',
+                    '• Adapt your style to your audience\'s preferences',
+                    '• Be aware of your natural communication tendencies',
+                    '• Practice active listening and empathy',
+                    '• Provide clear, specific feedback',
+                    '• Use multiple communication channels when appropriate',
+                    '',
+                    'Remember that effective leaders adjust their communication style',
+                    'based on the situation and the people involved. Your natural style',
+                    'is your starting point, not your limitation.'
+                ];
+                
+                communicationGuidance.forEach(line => {
+                    if (line.endsWith(':')) {
+                        doc.setFont(undefined, 'bold');
+                    } else {
+                        doc.setFont(undefined, 'normal');
+                    }
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+            };
+
+            const generateDecisionMakingStyle = (doc, participant) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 10);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Decision-Making Style', 20, 30);
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Your Decision-Making Approach:', 20, 60);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                const decisionText = doc.splitTextToSize(participant.profile.decisionMaking, 170);
+                let yPosition = 80;
+                decisionText.forEach(line => {
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+                
+                yPosition += 10;
+                const decisionGuidance = [
+                    'Enhancing Your Decision-Making:',
+                    '',
+                    '• Recognize when your natural style may not fit the situation',
+                    '• Gather appropriate levels of information for the decision',
+                    '• Consider the impact on all stakeholders',
+                    '• Balance speed with thoroughness based on urgency',
+                    '• Communicate your decision-making process to others',
+                    '',
+                    'Great leaders adapt their decision-making approach based on:',
+                    '• The complexity and importance of the decision',
+                    '• Time constraints and urgency',
+                    '• Available information and expertise',
+                    '• Stakeholder involvement needs'
+                ];
+                
+                decisionGuidance.forEach(line => {
+                    if (line.endsWith(':')) {
+                        doc.setFont(undefined, 'bold');
+                    } else {
+                        doc.setFont(undefined, 'normal');
+                    }
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+            };
+
+            const generateTeamDynamics = (doc, participant) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 11);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Team Dynamics & Leadership', 20, 30);
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Your Team Leadership Style:', 20, 60);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                const teamText = doc.splitTextToSize(participant.profile.teamDynamics, 170);
+                let yPosition = 80;
+                teamText.forEach(line => {
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+                
+                yPosition += 10;
+                const teamGuidance = [
+                    'Optimizing Team Performance:',
+                    '',
+                    '• Understand and appreciate different DISC styles on your team',
+                    '• Adapt your leadership approach to individual team members',
+                    '• Create psychological safety for all personality types',
+                    '• Leverage the diverse strengths of your team members',
+                    '• Address conflicts with awareness of style differences',
+                    '',
+                    'Building High-Performance Teams:',
+                    '',
+                    '• Establish clear goals and expectations',
+                    '• Provide regular feedback and recognition',
+                    '• Foster open communication and collaboration',
+                    '• Develop team members\' individual strengths',
+                    '• Create opportunities for growth and development'
+                ];
+                
+                teamGuidance.forEach(line => {
+                    if (line.endsWith(':')) {
+                        doc.setFont(undefined, 'bold');
+                    } else {
+                        doc.setFont(undefined, 'normal');
+                    }
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+            };
+
+            const generateDevelopmentRecommendations = (doc, participant) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 12);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Leadership Development Recommendations', 20, 30);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                
+                const recommendations = [
+                    'Based on your DISC profile, here are specific development recommendations:',
+                    '',
+                    '1. LEVERAGE YOUR STRENGTHS',
+                    '   • Identify situations where your natural style is most effective',
+                    '   • Seek roles and projects that utilize your key strengths',
+                    '   • Mentor others who could benefit from your natural abilities',
+                    '',
+                    '2. DEVELOP FLEXIBILITY',
+                    '   • Practice adapting your style to different situations',
+                    '   • Learn to recognize when your natural approach may not be optimal',
+                    '   • Develop skills in your less dominant DISC areas',
+                    '',
+                    '3. ENHANCE SELF-AWARENESS',
+                    '   • Regularly seek feedback from colleagues and team members',
+                    '   • Reflect on your leadership effectiveness in different situations',
+                    '   • Consider 360-degree feedback assessments',
+                    '',
+                    '4. BUILD COMPLEMENTARY RELATIONSHIPS',
+                    '   • Partner with others who have complementary DISC styles',
+                    '   • Build a diverse leadership team',
+                    '   • Seek mentors with different leadership approaches',
+                    '',
+                    '5. CONTINUOUS LEARNING',
+                    '   • Invest in leadership development programs',
+                    '   • Read books and articles on leadership and behavioral styles',
+                    '   • Attend workshops and seminars on leadership effectiveness'
+                ];
+                
+                let yPosition = 50;
+                recommendations.forEach(line => {
+                    if (line.match(/^\d+\./)) {
+                        doc.setFont(undefined, 'bold');
+                    } else if (line.startsWith('   •')) {
+                        doc.setFont(undefined, 'normal');
+                    } else {
+                        doc.setFont(undefined, 'normal');
+                    }
+                    doc.text(line, 20, yPosition);
+                    yPosition += 7;
+                });
+            };
+
+            const generateClosingPage = (doc, branding) => {
+                const { reportSettings } = StateModule.getState();
+                addPageHeader(doc, reportSettings, 13);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('Thank You', 20, 30);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                
+                const closingText = [
+                    'Congratulations on completing your DISC Leadership Assessment!',
+                    '',
+                    'This report provides a foundation for your ongoing leadership development.',
+                    'Remember that leadership is a journey of continuous growth and learning.',
+                    'Your DISC profile is a tool to help you understand your natural tendencies',
+                    'and develop greater effectiveness as a leader.',
+                    '',
+                    'We encourage you to:',
+                    '• Share appropriate insights with your team and colleagues',
+                    '• Use this information to enhance your leadership effectiveness',
+                    '• Revisit this report periodically as you grow and develop',
+                    '• Consider additional assessments and development opportunities',
+                    '',
+                    'For additional support and development resources, please contact:',
+                    '',
+                    branding.companyName,
+                    branding.tagline
+                ];
+                
+                let yPosition = 60;
+                closingText.forEach(line => {
+                    if (line === branding.companyName) {
+                        doc.setFont(undefined, 'bold');
+                    } else {
+                        doc.setFont(undefined, 'normal');
+                    }
+                    doc.text(line, 20, yPosition);
+                    yPosition += 8;
+                });
+                
+                // Add company info if available
+                if (branding.companyInfo) {
+                    yPosition += 10;
+                    const companyInfoLines = doc.splitTextToSize(branding.companyInfo, 170);
+                    companyInfoLines.forEach(line => {
+                        doc.text(line, 20, yPosition);
+                        yPosition += 6;
+                    });
+                }
+                
+                yPosition += 10;
+                doc.text('Thank you for investing in your leadership development!', 20, yPosition);
+            };
+
+            // Generate comprehensive team management report
+            const generateTeamPDF = (participants) => {
+                try {
+                    const { branding, reportSettings } = StateModule.getState();
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+                    
+                    // Calculate team statistics
+                    const teamStats = calculateTeamStatistics(participants);
+                    
+                    // Cover Page
+                    generateTeamCoverPage(doc, branding, reportSettings, participants.length);
+                    
+                    // Executive Summary
+                    doc.addPage();
+                    generateExecutiveSummary(doc, teamStats, reportSettings);
+                    
+                    // Group Profile Distribution
+                    doc.addPage();
+                    generateGroupProfileDistribution(doc, teamStats, reportSettings);
+                    
+                    // Team Strengths Summary
+                    doc.addPage();
+                    generateTeamStrengthsSummary(doc, teamStats, reportSettings);
+                    
+                    // Potential Risks & Blind Spots
+                    doc.addPage();
+                    generatePotentialRisks(doc, teamStats, reportSettings);
+                    
+                    // Leadership Style in Group
+                    doc.addPage();
+                    generateLeadershipStyleGroup(doc, teamStats, reportSettings);
+                    
+                    // Communication Style Mapping
+                    doc.addPage();
+                    generateCommunicationMapping(doc, teamStats, reportSettings);
+                    
+                    // Decision-Making Style (Group)
+                    doc.addPage();
+                    generateGroupDecisionMaking(doc, teamStats, reportSettings);
+                    
+                    // Team Dynamics Heatmap
+                    doc.addPage();
+                    generateTeamDynamicsHeatmap(doc, teamStats, reportSettings);
+                    
+                    // Management Recommendations
+                    doc.addPage();
+                    generateManagementRecommendations(doc, teamStats, reportSettings);
+                    
+                    // Save PDF
+                    const fileName = `Team_DISC_Management_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+                    doc.save(fileName);
+                    
+                    alert('Comprehensive Team Management Report generated successfully!');
+                    
+                } catch (error) {
+                    console.error('Team PDF Generation Error:', error);
+                    alert('There was an error generating the team report. Please try again.');
+                }
+            };
+
+            // Calculate team statistics for reporting
+            const calculateTeamStatistics = (participants) => {
+                const stats = {
+                    totalParticipants: participants.length,
+                    discDistribution: { D: 0, I: 0, S: 0, C: 0 },
+                    combinationDistribution: {},
+                    leadershipStyles: {},
+                    averageScores: { D: 0, I: 0, S: 0, C: 0 }
+                };
+                
+                participants.forEach(participant => {
+                    // Count primary types
+                    const primary = participant.dominantTypes.primary;
+                    stats.discDistribution[primary]++;
+                    
+                    // Count combinations
+                    const combo = participant.dominantTypes.combination;
+                    stats.combinationDistribution[combo] = (stats.combinationDistribution[combo] || 0) + 1;
+                    
+                    // Count leadership styles
+                    const style = participant.profile.title;
+                    stats.leadershipStyles[style] = (stats.leadershipStyles[style] || 0) + 1;
+                    
+                    // Sum scores for averages
+                    Object.keys(participant.finalScores).forEach(type => {
+                        stats.averageScores[type] += participant.finalScores[type];
+                    });
+                });
+                
+                // Calculate averages
+                Object.keys(stats.averageScores).forEach(type => {
+                    stats.averageScores[type] = Math.round(stats.averageScores[type] / participants.length * 10) / 10;
+                });
+                
+                // Calculate percentages
+                stats.discPercentages = {};
+                Object.keys(stats.discDistribution).forEach(type => {
+                    stats.discPercentages[type] = Math.round((stats.discDistribution[type] / participants.length) * 100);
+                });
+                
+                return stats;
+            };
+
+            // Add professional background to all team report pages
+            const addTeamPageBackground = (doc, reportSettings) => {
+                const bgColor = hexToRgb(reportSettings.pdfBackgroundColor || '#f8f9fa');
+                doc.setFillColor(bgColor.r, bgColor.g, bgColor.b);
+                doc.rect(0, 0, 210, 297, 'F');
+                
+                // Add subtle header accent
+                doc.setFillColor(52, 152, 219);
+                doc.rect(0, 0, 210, 8, 'F');
+            };
+
+            const generateTeamCoverPage = (doc, branding, reportSettings, participantCount) => {
+                addTeamPageBackground(doc, reportSettings);
+                addPageNumber(doc, 1);
+                
+                // Title section
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(28);
+                doc.setFont(undefined, 'bold');
+                doc.text('TEAM DISC MANAGEMENT REPORT', 20, 50);
+                
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'normal');
+                doc.text('Comprehensive Team Analysis & Leadership Insights', 20, 70);
+                
+                // Team info box
+                doc.setFillColor(255, 255, 255);
+                doc.setDrawColor(220, 220, 220);
+                doc.roundedRect(20, 100, 170, 60, 8, 8, 'FD');
+                
+                doc.setTextColor(52, 152, 219);
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text(`Team Size: ${participantCount} Members`, 30, 120);
+                
+                doc.setTextColor(80, 80, 80);
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                doc.text(`Report Generated: ${new Date().toLocaleDateString()}`, 30, 135);
+                doc.text('Analysis Type: DISC Leadership Team Assessment', 30, 150);
+                
+                // Company branding
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.text(branding.companyName, 20, 200);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                doc.text(branding.tagline, 20, 215);
+            };
+
+            const generateExecutiveSummary = (doc, teamStats, reportSettings) => {
+                addTeamPageBackground(doc, reportSettings);
+                addPageNumber(doc, 2);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('1. Executive Summary', 20, 30);
+                
+                // Team overview
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Team DISC Distribution:', 20, 60);
+                
+                let yPos = 80;
+                Object.entries(teamStats.discPercentages).forEach(([type, percentage]) => {
+                    const typeNames = { D: 'Dominance', I: 'Influence', S: 'Steadiness', C: 'Conscientiousness' };
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(`${type} (${typeNames[type]}): ${percentage}% (${teamStats.discDistribution[type]} members)`, 25, yPos);
+                    yPos += 15;
+                });
+                
+                // Key insights
+                yPos += 10;
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Key Team Insights:', 20, yPos);
+                
+                yPos += 20;
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                
+                // Generate dynamic insights based on team composition
+                const insights = generateTeamInsights(teamStats);
+                insights.forEach(insight => {
+                    const lines = doc.splitTextToSize(`• ${insight}`, 170);
+                    lines.forEach(line => {
+                        doc.text(line, 25, yPos);
+                        yPos += 8;
+                    });
+                    yPos += 5;
+                });
+            };
+
+            const generateTeamInsights = (teamStats) => {
+                const insights = [];
+                const { discPercentages } = teamStats;
+                
+                // Dominant style insights
+                const dominantStyle = Object.keys(discPercentages).reduce((a, b) => 
+                    discPercentages[a] > discPercentages[b] ? a : b
+                );
+                
+                const styleDescriptions = {
+                    D: 'results-driven and decisive leadership',
+                    I: 'enthusiastic and people-focused approach',
+                    S: 'steady and supportive team dynamics',
+                    C: 'analytical and quality-focused processes'
+                };
+                
+                insights.push(`Team shows strong ${styleDescriptions[dominantStyle]} with ${discPercentages[dominantStyle]}% ${dominantStyle}-style leaders`);
+                
+                // Balance insights
+                const lowStyles = Object.entries(discPercentages).filter(([, percentage]) => percentage < 15);
+                if (lowStyles.length > 0) {
+                    const lowStyleNames = lowStyles.map(([type]) => type).join(' and ');
+                    insights.push(`Potential gap in ${lowStyleNames} characteristics may require attention`);
+                }
+                
+                // High concentration insights
+                const highStyles = Object.entries(discPercentages).filter(([, percentage]) => percentage > 40);
+                if (highStyles.length > 0) {
+                    insights.push('High concentration in certain styles may create both strengths and blind spots');
+                }
+                
+                return insights;
+            };
+
+            // Add page numbers to all reports
+            const addPageNumber = (doc, pageNum) => {
+                doc.setTextColor(120, 120, 120);
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                doc.text(`Page ${pageNum}`, 190, 285);
+            };
+
+            // Complete team report functions
+            const generateGroupProfileDistribution = (doc, teamStats, reportSettings) => {
+                addTeamPageBackground(doc, reportSettings);
+                addPageNumber(doc, 3);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('2. Group Profile Distribution', 20, 30);
+                
+                // Visual bar chart representation
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('DISC Type Distribution:', 20, 60);
+                
+                let yPos = 80;
+                const colors = { D: [231, 76, 60], I: [243, 156, 18], S: [39, 174, 96], C: [52, 152, 219] };
+                
+                Object.entries(teamStats.discPercentages).forEach(([type, percentage]) => {
+                    const typeNames = { D: 'Dominance', I: 'Influence', S: 'Steadiness', C: 'Conscientiousness' };
+                    
+                    // Draw bar
+                    doc.setFillColor(...colors[type]);
+                    const barWidth = (percentage / 100) * 120;
+                    doc.rect(70, yPos - 8, barWidth, 12, 'F');
+                    
+                    // Add text
+                    doc.setTextColor(44, 62, 80);
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(`${type} (${typeNames[type]})`, 25, yPos);
+                    doc.text(`${percentage}% (${teamStats.discDistribution[type]})`, 195, yPos);
+                    
+                    yPos += 25;
+                });
+                
+                // Top combinations
+                yPos += 10;
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Top Leadership Combinations:', 20, yPos);
+                
+                yPos += 20;
+                const sortedCombos = Object.entries(teamStats.combinationDistribution)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 3);
+                
+                sortedCombos.forEach(([combo, count]) => {
+                    const percentage = Math.round((count / teamStats.totalParticipants) * 100);
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(`• ${combo}: ${count} members (${percentage}%)`, 25, yPos);
+                    yPos += 15;
+                });
+            };
+
+            const generateTeamStrengthsSummary = (doc, teamStats, reportSettings) => {
+                addTeamPageBackground(doc, reportSettings);
+                addPageNumber(doc, 4);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('3. Team Strengths Summary', 20, 30);
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Collective Team Strengths:', 20, 60);
+                
+                let yPos = 80;
+                const strengthsByType = {
+                    D: ['Results-driven approach', 'Decisive leadership', 'Competitive spirit', 'Problem-solving focus'],
+                    I: ['Creative innovation', 'Persuasive communication', 'High energy', 'Team motivation'],
+                    S: ['Loyal support', 'Dependable execution', 'Team harmony', 'Steady performance'],
+                    C: ['Detail-oriented analysis', 'Structured processes', 'Quality focus', 'Risk management']
+                };
+                
+                Object.entries(teamStats.discDistribution).forEach(([type, count]) => {
+                    if (count > 0) {
+                        const typeNames = { D: 'High D', I: 'High I', S: 'High S', C: 'High C' };
+                        doc.setFontSize(14);
+                        doc.setFont(undefined, 'bold');
+                        doc.text(`${typeNames[type]} Strengths (${count} members):`, 25, yPos);
+                        yPos += 15;
+                        
+                        strengthsByType[type].forEach(strength => {
+                            doc.setFontSize(12);
+                            doc.setFont(undefined, 'normal');
+                            doc.text(`• ${strength}`, 30, yPos);
+                            yPos += 12;
+                        });
+                        yPos += 10;
+                    }
+                });
+                
+                // Team insight
+                yPos += 10;
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Key Insight:', 20, yPos);
+                yPos += 15;
+                
+                const dominantType = Object.keys(teamStats.discDistribution).reduce((a, b) => 
+                    teamStats.discDistribution[a] > teamStats.discDistribution[b] ? a : b
+                );
+                
+                const insights = {
+                    D: 'This team excels at driving results and making tough decisions, but may need to focus on people development.',
+                    I: 'This team brings strong innovation and motivation, but may need support with follow-through and execution.',
+                    S: 'This team provides excellent stability and support, but may need encouragement to embrace change and take risks.',
+                    C: 'This team delivers high-quality, systematic work, but may need to improve speed and flexibility.'
+                };
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                const insightText = doc.splitTextToSize(insights[dominantType], 170);
+                insightText.forEach(line => {
+                    doc.text(line, 25, yPos);
+                    yPos += 8;
+                });
+            };
+
+            const generatePotentialRisks = (doc, teamStats, reportSettings) => {
+                addTeamPageBackground(doc, reportSettings);
+                addPageNumber(doc, 5);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('4. Potential Risks & Blind Spots', 20, 30);
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Team Imbalances & Risk Areas:', 20, 60);
+                
+                let yPos = 80;
+                
+                // Analyze imbalances
+                const risks = [];
+                Object.entries(teamStats.discPercentages).forEach(([type, percentage]) => {
+                    if (percentage > 50) {
+                        const riskDescriptions = {
+                            D: 'Too many High D: Risk of conflict, impatience, lack of empathy, rushed decisions',
+                            I: 'Too many High I: Risk of over-promising, lack of follow-through, weak execution, unrealistic optimism',
+                            S: 'Too many High S: Risk of resistance to change, slow decision-making, conflict avoidance',
+                            C: 'Too many High C: Risk of analysis paralysis, slow execution, perfectionism, inflexibility'
+                        };
+                        risks.push(riskDescriptions[type]);
+                    }
+                    
+                    if (percentage < 10) {
+                        const gapDescriptions = {
+                            D: 'Too few High D: Weak leadership presence, lack of urgency, poor results focus',
+                            I: 'Too few High I: Low team morale, poor communication, lack of innovation',
+                            S: 'Too few High S: Poor team stability, low harmony, high turnover risk',
+                            C: 'Too few High C: Weak compliance, poor risk management, quality issues'
+                        };
+                        risks.push(gapDescriptions[type]);
+                    }
+                });
+                
+                if (risks.length === 0) {
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    doc.text('• Team shows good DISC balance with no major risk areas identified', 25, yPos);
+                } else {
+                    risks.forEach(risk => {
+                        doc.setFontSize(12);
+                        doc.setFont(undefined, 'normal');
+                        const riskLines = doc.splitTextToSize(`• ${risk}`, 170);
+                        riskLines.forEach(line => {
+                            doc.text(line, 25, yPos);
+                            yPos += 8;
+                        });
+                        yPos += 10;
+                    });
+                }
+                
+                // Mitigation strategies
+                yPos += 20;
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Risk Mitigation Strategies:', 20, yPos);
+                yPos += 20;
+                
+                const strategies = [
+                    'Implement diverse project teams with mixed DISC styles',
+                    'Provide training on style flexibility and adaptation',
+                    'Create structured decision-making processes',
+                    'Establish clear communication protocols',
+                    'Regular team feedback and style awareness sessions'
+                ];
+                
+                strategies.forEach(strategy => {
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(`• ${strategy}`, 25, yPos);
+                    yPos += 15;
+                });
+            };
+
+            const generateLeadershipStyleGroup = (doc, teamStats, reportSettings) => {
+                addTeamPageBackground(doc, reportSettings);
+                addPageNumber(doc, 6);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('5. Leadership Style in the Group', 20, 30);
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Leadership Distribution Analysis:', 20, 60);
+                
+                let yPos = 80;
+                
+                // Show top leadership styles
+                const sortedStyles = Object.entries(teamStats.leadershipStyles)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 5);
+                
+                sortedStyles.forEach(([style, count]) => {
+                    const percentage = Math.round((count / teamStats.totalParticipants) * 100);
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(`• ${style}: ${count} leaders (${percentage}%)`, 25, yPos);
+                    yPos += 15;
+                });
+                
+                // Leadership impact analysis
+                yPos += 20;
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Leadership Impact on Team Culture:', 20, yPos);
+                yPos += 20;
+                
+                const dominantStyle = sortedStyles[0];
+                if (dominantStyle) {
+                    const [styleName, count] = dominantStyle;
+                    const percentage = Math.round((count / teamStats.totalParticipants) * 100);
+                    
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(`Primary leadership influence: ${styleName} (${percentage}%)`, 25, yPos);
+                    yPos += 20;
+                    
+                    // Add specific insights based on dominant leadership style
+                    const leadershipInsights = {
+                        'The Inspirational Driver': 'Leaders inspire and drive action, creating high-energy, results-focused culture',
+                        'The Demanding Perfectionist': 'Leaders set high standards, creating quality-focused, systematic culture',
+                        'The People-Focused Motivator': 'Leaders build relationships, creating collaborative, supportive culture',
+                        'The Analytical Communicator': 'Leaders use expertise, creating knowledge-based, careful culture'
+                    };
+                    
+                    const insight = leadershipInsights[styleName] || 'Leaders create unique team dynamics based on their combined styles';
+                    const insightLines = doc.splitTextToSize(insight, 170);
+                    insightLines.forEach(line => {
+                        doc.text(line, 25, yPos);
+                        yPos += 8;
+                    });
+                }
+            };
+
+            const generateCommunicationMapping = (doc, teamStats, reportSettings) => {
+                addTeamPageBackground(doc, reportSettings);
+                addPageNumber(doc, 7);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('6. Communication Style Mapping', 20, 30);
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Team Communication Preferences:', 20, 60);
+                
+                let yPos = 80;
+                
+                // Communication style analysis
+                const commStyles = {
+                    D: 'Direct, brief, results-focused communication',
+                    I: 'Enthusiastic, interactive, relationship-focused communication',
+                    S: 'Patient, supportive, harmony-focused communication',
+                    C: 'Detailed, precise, fact-focused communication'
+                };
+                
+                Object.entries(teamStats.discDistribution).forEach(([type, count]) => {
+                    if (count > 0) {
+                        const percentage = Math.round((count / teamStats.totalParticipants) * 100);
+                        doc.setFontSize(12);
+                        doc.setFont(undefined, 'bold');
+                        doc.text(`${type}-Style (${percentage}%): `, 25, yPos);
+                        
+                        doc.setFont(undefined, 'normal');
+                        const styleText = doc.splitTextToSize(commStyles[type], 140);
+                        let xOffset = 25;
+                        styleText.forEach((line, index) => {
+                            if (index === 0) {
+                                doc.text(line, 80, yPos);
+                            } else {
+                                doc.text(line, 25, yPos + (index * 8));
+                            }
+                        });
+                        yPos += Math.max(15, styleText.length * 8 + 5);
+                    }
+                });
+                
+                // Team communication recommendations
+                yPos += 20;
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Communication Recommendations:', 20, yPos);
+                yPos += 20;
+                
+                const recommendations = [
+                    'Use multiple communication channels to reach all style preferences',
+                    'Provide both high-level summaries (D/I) and detailed information (S/C)',
+                    'Allow time for questions and clarification in meetings',
+                    'Balance task-focused and relationship-focused communication',
+                    'Adapt presentation style based on audience composition'
+                ];
+                
+                recommendations.forEach(rec => {
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    const recLines = doc.splitTextToSize(`• ${rec}`, 170);
+                    recLines.forEach(line => {
+                        doc.text(line, 25, yPos);
+                        yPos += 8;
+                    });
+                    yPos += 5;
+                });
+            };
+
+            const generateGroupDecisionMaking = (doc, teamStats, reportSettings) => {
+                addTeamPageBackground(doc, reportSettings);
+                addPageNumber(doc, 8);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('7. Decision-Making Style (Group)', 20, 30);
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Collective Decision-Making Approach:', 20, 60);
+                
+                let yPos = 80;
+                
+                // Analyze team decision-making tendencies
+                const decisionStyles = {
+                    D: 'Quick, decisive, risk-taking approach',
+                    I: 'Intuitive, collaborative, optimistic approach',
+                    S: 'Cautious, consensus-building, stability-first approach',
+                    C: 'Analytical, systematic, data-driven approach'
+                };
+                
+                const dominantTypes = Object.entries(teamStats.discDistribution)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 2);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                doc.text('Primary decision-making characteristics:', 25, yPos);
+                yPos += 20;
+                
+                dominantTypes.forEach(([type, count]) => {
+                    const percentage = Math.round((count / teamStats.totalParticipants) * 100);
+                    doc.text(`• ${type}-Style (${percentage}%): ${decisionStyles[type]}`, 30, yPos);
+                    yPos += 15;
+                });
+                
+                // Decision-making strengths and challenges
+                yPos += 20;
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Team Decision-Making Profile:', 20, yPos);
+                yPos += 20;
+                
+                const [primaryType] = dominantTypes[0];
+                const [secondaryType] = dominantTypes[1] || [null];
+                
+                const profiles = {
+                    'DI': 'Fast decisions with innovation focus, but may overlook details and risks',
+                    'DS': 'Balanced decisions considering both results and stability',
+                    'DC': 'Systematic decisions with quality focus, strong execution',
+                    'IS': 'Collaborative decisions with people focus, may be slow but thorough',
+                    'IC': 'Well-researched decisions with careful analysis, may be slow',
+                    'SC': 'Cautious, quality-focused decisions, very thorough but slow'
+                };
+                
+                const combo = primaryType + (secondaryType || '');
+                const profile = profiles[combo] || `${primaryType}-dominant decision making with ${secondaryType || 'balanced'} influence`;
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                const profileLines = doc.splitTextToSize(profile, 170);
+                profileLines.forEach(line => {
+                    doc.text(line, 25, yPos);
+                    yPos += 8;
+                });
+            };
+
+            const generateTeamDynamicsHeatmap = (doc, teamStats, reportSettings) => {
+                addTeamPageBackground(doc, reportSettings);
+                addPageNumber(doc, 9);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('8. Team Dynamics Heatmap', 20, 30);
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('DISC Style Concentration Analysis:', 20, 60);
+                
+                let yPos = 80;
+                
+                // Visual heatmap representation
+                const colors = { D: [231, 76, 60], I: [243, 156, 18], S: [39, 174, 96], C: [52, 152, 219] };
+                
+                Object.entries(teamStats.discPercentages).forEach(([type, percentage]) => {
+                    const intensity = percentage / 100;
+                    const color = colors[type];
+                    
+                    // Draw intensity bar
+                    doc.setFillColor(color[0] * intensity + 255 * (1 - intensity), 
+                                   color[1] * intensity + 255 * (1 - intensity), 
+                                   color[2] * intensity + 255 * (1 - intensity));
+                    doc.rect(25, yPos - 8, 160, 15, 'F');
+                    
+                    // Add border
+                    doc.setDrawColor(...color);
+                    doc.setLineWidth(1);
+                    doc.rect(25, yPos - 8, 160, 15, 'D');
+                    
+                    // Add text
+                    doc.setTextColor(44, 62, 80);
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'bold');
+                    doc.text(`${type}: ${percentage}%`, 30, yPos);
+                    
+                    yPos += 25;
+                });
+                
+                // Gap and strength analysis
+                yPos += 20;
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Strength Clusters & Gaps:', 20, yPos);
+                yPos += 20;
+                
+                const strengths = Object.entries(teamStats.discPercentages)
+                    .filter(([, percentage]) => percentage > 30)
+                    .map(([type]) => type);
+                
+                const gaps = Object.entries(teamStats.discPercentages)
+                    .filter(([, percentage]) => percentage < 15)
+                    .map(([type]) => type);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                
+                if (strengths.length > 0) {
+                    doc.text(`Strength clusters: ${strengths.join(', ')} styles are well-represented`, 25, yPos);
+                    yPos += 15;
+                }
+                
+                if (gaps.length > 0) {
+                    doc.text(`Potential gaps: ${gaps.join(', ')} styles may need strengthening`, 25, yPos);
+                    yPos += 15;
+                }
+                
+                if (strengths.length === 0 && gaps.length === 0) {
+                    doc.text('Team shows balanced DISC distribution across all styles', 25, yPos);
+                }
+            };
+
+            const generateManagementRecommendations = (doc, teamStats, reportSettings) => {
+                addTeamPageBackground(doc, reportSettings);
+                addPageNumber(doc, 10);
+                
+                doc.setTextColor(44, 62, 80);
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                doc.text('9. Management Recommendations', 20, 30);
+                
+                let yPos = 60;
+                
+                // Hiring strategy
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Hiring Strategy:', 20, yPos);
+                yPos += 20;
+                
+                const gaps = Object.entries(teamStats.discPercentages)
+                    .filter(([, percentage]) => percentage < 20)
+                    .map(([type]) => type);
+                
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                
+                if (gaps.length > 0) {
+                    doc.text(`Prioritize hiring ${gaps.join(' and ')} profiles to improve team balance`, 25, yPos);
+                } else {
+                    doc.text('Team shows good balance - maintain diverse hiring practices', 25, yPos);
+                }
+                yPos += 25;
+                
+                // Development focus
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Development Focus Areas:', 20, yPos);
+                yPos += 20;
+                
+                const developmentAreas = [
+                    'Style flexibility training for all team members',
+                    'Communication effectiveness workshops',
+                    'Decision-making process improvements',
+                    'Conflict resolution skills development',
+                    'Leadership coaching for high-potential individuals'
+                ];
+                
+                developmentAreas.forEach(area => {
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(`• ${area}`, 25, yPos);
+                    yPos += 15;
+                });
+                
+                // Leadership coaching
+                yPos += 10;
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('Leadership Coaching Recommendations:', 20, yPos);
+                yPos += 20;
+                
+                const coachingRecs = [
+                    'Provide style-specific coaching for dominant types',
+                    'Focus on developing underrepresented style capabilities',
+                    'Implement mentoring programs pairing different styles',
+                    'Create cross-functional project teams for style exposure'
+                ];
+                
+                coachingRecs.forEach(rec => {
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    const recLines = doc.splitTextToSize(`• ${rec}`, 170);
+                    recLines.forEach(line => {
+                        doc.text(line, 25, yPos);
+                        yPos += 8;
+                    });
+                    yPos += 7;
+                });
+            };
+
+            return {
+                generatePDF,
+                generateTeamPDF
+            };
+        })();
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', () => {
+            StateModule.loadFromStorage();
+            AdminModule.applyBranding();
+            
+            // Generate initial access codes if none exist
+            const { accessCodes } = StateModule.getState();
+            if (accessCodes.length === 0) {
+                AdminModule.generateAccessCodes();
+            }
+        });
+
+        // Global function exposure for HTML onclick handlers
+        window.AdminModule = AdminModule;
+        window.AssessmentModule = AssessmentModule;
+        window.ReportModule = ReportModule;
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ab7a15233e1fe1',t:'MTc1NzEzNTYwNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
