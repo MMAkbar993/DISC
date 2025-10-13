@@ -238,21 +238,54 @@ function setupLoginForm() {
     loginForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        const username = document.getElementById('username').value.trim();
+        const fullName = document.getElementById('fullname').value.trim();
+        const position = document.getElementById('position').value.trim();
+        const email = document.getElementById('email').value.trim();
         const accessCode = document.getElementById('accessCode').value.trim();
 
-        if (username && accessCode) {
-            // Store user credentials for later backend integration
-            userCredentials = { username, accessCode };
+        if (fullName && position && email && accessCode) {
+            // Store user credentials
+            userCredentials = { fullName, position, email, accessCode };
 
-            // TODO: Add backend authentication call here
-            // Example: authenticateUser(username, accessCode)
-
-            showAssessment();
+            // Start assessment with backend validation
+            startAssessment(userCredentials);
         } else {
             alert('Please fill in all required fields.');
         }
     });
+}
+
+// Start assessment with backend validation
+async function startAssessment(credentials) {
+    try {
+        showLoadingState();
+        
+        const response = await fetch('api/assessment.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'start_assessment',
+                full_name: credentials.fullName,
+                position: credentials.position,
+                email: credentials.email,
+                access_code: credentials.accessCode
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showAssessment();
+        } else {
+            throw new Error(result.error || 'Failed to start assessment');
+        }
+    } catch (error) {
+        console.error('Error starting assessment:', error);
+        alert('Error starting assessment: ' + error.message);
+        hideLoadingState();
+    }
 }
 
 // Show assessment section
@@ -260,6 +293,25 @@ function showAssessment() {
     document.getElementById('loginSection').style.display = 'none';
     document.getElementById('assessmentSection').style.display = 'block';
     updateProgress();
+    hideLoadingState();
+}
+
+// Show loading state
+function showLoadingState() {
+    const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Starting Assessment...';
+    }
+}
+
+// Hide loading state
+function hideLoadingState() {
+    const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-play"></i> Start Assessment';
+    }
 }
 
 // Generate question cards
@@ -455,7 +507,7 @@ function setupSubmitButton() {
 }
 
 // Submit assessment
-function submitAssessment() {
+async function submitAssessment() {
     // Validate all questions have both MOST and LEAST answers
     let fullyAnsweredCount = 0;
     for (let i = 0; i < questions.length; i++) {
@@ -471,27 +523,40 @@ function submitAssessment() {
         return;
     }
 
-    // Prepare assessment data for backend
-    const assessmentData = {
-        user: userCredentials,
-        answers: currentAnswers,
-        timestamp: new Date().toISOString(),
-        questionsTotal: questions.length
-    };
+    try {
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.textContent = 'Submitting...';
+        submitBtn.disabled = true;
 
-    // TODO: Replace with actual backend API call
-    // Example: submitAnswers(assessmentData)
-    console.log('Assessment data ready for backend:', assessmentData);
+        const response = await fetch('api/assessment.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'submit_assessment',
+                answers: currentAnswers
+            })
+        });
 
-    // Simulate API call with loading state
-    const submitBtn = document.getElementById('submitBtn');
-    submitBtn.textContent = 'Submitting...';
-    submitBtn.disabled = true;
+        const result = await response.json();
 
-    // Simulate network delay
-    setTimeout(() => {
-        showCompletionMessage();
-    }, 1500);
+        if (result.success) {
+            // Store profile data for display
+            window.assessmentProfile = result.data.profile;
+            showCompletionMessage();
+        } else {
+            throw new Error(result.error || 'Failed to submit assessment');
+        }
+    } catch (error) {
+        console.error('Error submitting assessment:', error);
+        alert('Error submitting assessment: ' + error.message);
+        
+        // Reset button state
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.textContent = 'Submit Assessment';
+        submitBtn.disabled = false;
+    }
 }
 
 // Show validation error message
@@ -530,8 +595,31 @@ function showCompletionMessage() {
     document.getElementById('assessmentSection').style.display = 'none';
     document.getElementById('completionSection').style.display = 'block';
 
-    // TODO: Add backend call to process results
-    // Example: processAssessmentResults(userCredentials.username)
+    // Display profile information if available
+    if (window.assessmentProfile) {
+        displayProfileResults(window.assessmentProfile);
+    }
+}
+
+// Display profile results
+function displayProfileResults(profile) {
+    const completionSection = document.getElementById('completionSection');
+    
+    const profileHTML = `
+        <div class="profile-results">
+            <h3>Your DISC Leadership Profile</h3>
+            <div class="profile-summary">
+                <h4>${profile.title}</h4>
+                <p><strong>Primary Type:</strong> ${profile.primary_type}</p>
+                <p><strong>Secondary Type:</strong> ${profile.secondary_type}</p>
+                <div class="profile-description">
+                    <p>${profile.description}</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    completionSection.innerHTML += profileHTML;
 }
 
 // Contact Administrator Function

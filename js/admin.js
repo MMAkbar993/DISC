@@ -92,23 +92,45 @@ const UtilityModule = (() => {
   
   // Admin Module
   const AdminModule = (() => {
-    const ADMIN_CREDENTIALS = {
-      username: "admin",
-      password: "disc2024admin",
-    }
+    let isLoggedIn = false;
   
-    const login = () => {
+    const login = async () => {
       const username = prompt("Admin Username:")
       const password = prompt("Admin Password:")
-      if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-        StateModule.setState({ adminLoggedIn: true })
-        updateInputsFromState()
-        displayAccessCodes()
-        displayParticipants()
-        applyBranding()
-        alert("Admin logged in.")
-      } else {
-        alert("Invalid admin credentials")
+      
+      if (!username || !password) {
+        alert("Username and password are required")
+        return
+      }
+
+      try {
+        const response = await fetch('api/auth.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'admin_login',
+            username: username,
+            password: password
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          isLoggedIn = true
+          StateModule.setState({ adminLoggedIn: true })
+          updateInputsFromState()
+          loadDashboardData()
+          applyBranding()
+          alert("Admin logged in successfully.")
+        } else {
+          alert("Invalid admin credentials: " + (result.error || "Login failed"))
+        }
+      } catch (error) {
+        console.error('Login error:', error)
+        alert("Login failed: " + error.message)
       }
     }
   
@@ -142,48 +164,112 @@ const UtilityModule = (() => {
       reader.readAsDataURL(file)
     }
   
-    const generateAccessCodes = () => {
-      const newCodes = Array.from({ length: 180 }, () => UtilityModule.generateRandomCode())
-      StateModule.setState({ accessCodes: newCodes })
-      displayAccessCodes()
+    const generateAccessCodes = async () => {
+      const count = prompt("How many access codes to generate? (1-100)", "20")
+      const numCodes = parseInt(count)
+      
+      if (!numCodes || numCodes < 1 || numCodes > 100) {
+        alert("Please enter a number between 1 and 100")
+        return
+      }
+
+      try {
+        const response = await fetch('api/admin.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'generate_codes',
+            count: numCodes
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert(`Successfully generated ${numCodes} access codes`)
+          loadAccessCodes()
+        } else {
+          alert("Error generating codes: " + (result.error || "Unknown error"))
+        }
+      } catch (error) {
+        console.error('Generate codes error:', error)
+        alert("Error generating codes: " + error.message)
+      }
     }
   
-    const displayAccessCodes = () => {
-      const { accessCodes } = StateModule.getState()
+    const loadAccessCodes = async () => {
+      try {
+        const response = await fetch('api/admin.php?action=access_codes')
+        const result = await response.json()
+
+        if (result.success) {
+          displayAccessCodes(result.data.access_codes)
+        } else {
+          console.error('Error loading access codes:', result.error)
+        }
+      } catch (error) {
+        console.error('Error loading access codes:', error)
+      }
+    }
+
+    const displayAccessCodes = (accessCodes = []) => {
       const container = document.getElementById("accessCodesContainer")
       const countElement = document.getElementById("codeCount")
       if (!container || !countElement) return
-  
+
       container.innerHTML = ""
-      countElement.textContent = `${accessCodes.length} codes available`
-  
+      
+      const usedCodes = accessCodes.filter(code => code.is_used).length
+      const availableCodes = accessCodes.length - usedCodes
+      
+      countElement.textContent = `${accessCodes.length} total codes (${availableCodes} available, ${usedCodes} used)`
+
       accessCodes.forEach((code) => {
         const codeDiv = document.createElement("div")
-        codeDiv.className = "access-code-item"
-        codeDiv.textContent = code
+        codeDiv.className = `access-code-item ${code.is_used ? 'used' : 'available'}`
+        codeDiv.innerHTML = `
+          <span class="code">${code.code}</span>
+          ${code.is_used ? `<span class="used-by">Used by: ${code.used_by || 'Unknown'}</span>` : '<span class="status">Available</span>'}
+        `
         container.appendChild(codeDiv)
       })
     }
   
-    const displayParticipants = () => {
-      const { participants } = StateModule.getState()
+    const loadParticipants = async () => {
+      try {
+        const response = await fetch('api/admin.php?action=participants')
+        const result = await response.json()
+
+        if (result.success) {
+          displayParticipants(result.data.participants)
+        } else {
+          console.error('Error loading participants:', result.error)
+        }
+      } catch (error) {
+        console.error('Error loading participants:', error)
+      }
+    }
+
+    const displayParticipants = (participants = []) => {
       const tbody = document.getElementById("participantsTableBody")
       if (!tbody) return
-  
+
       if (!participants.length) {
         tbody.innerHTML = '<tr><td colspan="5" class="empty">No completed assessments yet</td></tr>'
-        updateParticipantSelection()
+        updateParticipantSelection(participants)
         return
       }
-  
+
       tbody.innerHTML = participants
         .map(
           (p) => `
         <tr>
-          <td>${p.name}</td>
-          <td>${p.role}</td>
-          <td>${p.date}</td>
-          <td>${p.profile?.title || "—"}</td>
+          <td>${p.full_name}</td>
+          <td>${p.position || '—'}</td>
+          <td>${p.completed_at ? new Date(p.completed_at).toLocaleDateString() : 'Incomplete'}</td>
+          <td>${p.profile_title || "—"}</td>
           <td>
             <button class="btn btn-secondary" onclick="AdminModule.generateReport('${p.id}')" style="margin-right:6px;">Report</button>
             <button class="btn" onclick="AdminModule.deleteParticipant('${p.id}')" style="background: var(--accent-color);">Delete</button>
@@ -192,25 +278,25 @@ const UtilityModule = (() => {
       `,
         )
         .join("")
-  
-      updateParticipantSelection()
+
+      updateParticipantSelection(participants)
     }
   
-    const updateParticipantSelection = () => {
-      const { participants } = StateModule.getState()
+    const updateParticipantSelection = (participants = []) => {
       const container = document.getElementById("participantSelectionContainer")
       const selectedCount = document.getElementById("selectedCount")
       const teamReportBtn = document.getElementById("teamReportBtn")
       if (!container || !selectedCount || !teamReportBtn) return
-  
+
       if (!participants.length) {
         container.innerHTML = '<p class="empty" style="margin:0;">No participants available for selection</p>'
         selectedCount.textContent = "0 participants selected (minimum 3 required)"
         teamReportBtn.disabled = true
         return
       }
-  
+
       container.innerHTML = participants
+        .filter(p => p.assessment_completed) // Only show completed assessments
         .map(
           (p) => `
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; padding:8px; border-radius:4px; background:#f8f9fa;">
@@ -220,13 +306,13 @@ const UtilityModule = (() => {
              onchange="AdminModule.updateSelectedCount()"
              style="transform:scale(1.2);" />
           <label for="participant_${p.id}" style="flex:1; cursor:pointer; margin:0;">
-            <strong>${p.name}</strong> - ${p.role} (${p.profile?.title || "Profile"})
+            <strong>${p.full_name}</strong> - ${p.position || 'Unknown'} (${p.profile_title || "Profile"})
           </label>
         </div>
       `,
         )
         .join("")
-  
+
       updateSelectedCount()
     }
   
@@ -279,15 +365,35 @@ const UtilityModule = (() => {
       ReportModule.generatePDF(participant)
     }
   
-    const deleteParticipant = (participantId) => {
+    const deleteParticipant = async (participantId) => {
       if (!confirm("Delete this participant and their assessment data? This cannot be undone.")) {
         return
       }
-      const { participants } = StateModule.getState()
-      const updated = participants.filter((p) => p.id !== participantId)
-      StateModule.setState({ participants: updated })
-      displayParticipants()
-      alert("Participant data deleted.")
+
+      try {
+        const response = await fetch('api/admin.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'delete_participant',
+            participant_id: participantId
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert("Participant data deleted successfully.")
+          loadParticipants()
+        } else {
+          alert("Error deleting participant: " + (result.error || "Unknown error"))
+        }
+      } catch (error) {
+        console.error('Delete participant error:', error)
+        alert("Error deleting participant: " + error.message)
+      }
     }
   
     const updateBranding = () => {
@@ -419,12 +525,36 @@ const UtilityModule = (() => {
       document.documentElement.style.setProperty("--custom-font", branding.fontFamily)
     }
   
+    const loadDashboardData = async () => {
+      try {
+        const response = await fetch('api/admin.php?action=dashboard_stats')
+        const result = await response.json()
+
+        if (result.success) {
+          updateDashboardStats(result.data)
+        } else {
+          console.error('Error loading dashboard stats:', result.error)
+        }
+      } catch (error) {
+        console.error('Error loading dashboard stats:', error)
+      }
+    }
+
+    const updateDashboardStats = (stats) => {
+      document.getElementById('totalParticipants').textContent = stats.total_participants || 0
+      document.getElementById('totalCodes').textContent = stats.total_codes || 0
+      document.getElementById('completedAssessments').textContent = stats.completed_assessments || 0
+      document.getElementById('pendingAssessments').textContent = stats.pending_assessments || 0
+    }
+
     return {
       login,
       uploadLogo,
       uploadBackground,
       generateAccessCodes,
+      loadAccessCodes,
       displayAccessCodes,
+      loadParticipants,
       displayParticipants,
       selectAllParticipants,
       clearAllParticipants,
@@ -438,6 +568,8 @@ const UtilityModule = (() => {
       updateReportSettings,
       saveAllSettings,
       applyBranding,
+      loadDashboardData,
+      updateDashboardStats,
     }
   })()
   
@@ -445,15 +577,15 @@ const UtilityModule = (() => {
   document.addEventListener("DOMContentLoaded", () => {
     StateModule.loadFromStorage()
     AdminModule.applyBranding()
-    // Seed codes if none exist (optional)
-    const { accessCodes } = StateModule.getState()
-    if (!accessCodes.length) {
-      AdminModule.generateAccessCodes()
+    
+    // Load initial data if admin is logged in
+    if (typeof window.isLoggedIn !== 'undefined' && window.isLoggedIn) {
+      AdminModule.loadDashboardData()
+      AdminModule.loadAccessCodes()
+      AdminModule.loadParticipants()
     }
+    
     // Reflect persisted values in inputs
-    AdminModule.displayAccessCodes?.()
-    AdminModule.displayParticipants?.()
-    // Keep inputs in sync with saved state
     ;(function syncInputs() {
       const { branding, reportSettings } = StateModule.getState()
       // Attempt to set inputs if they are in DOM already
@@ -466,7 +598,7 @@ const UtilityModule = (() => {
         document.getElementById("fontFamily").value = branding.fontFamily
         document.getElementById("companyNameFontSize").value = branding.companyNameFontSize || "24"
         document.getElementById("taglineFontSize").value = branding.taglineFontSize || "16"
-  
+
         document.getElementById("reportTitle").value = reportSettings.title
         document.getElementById("reportSubtitle").value = reportSettings.subtitle
         document.getElementById("logoSize").value = reportSettings.logoSize
