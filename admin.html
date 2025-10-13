@@ -510,30 +510,58 @@
             const username = document.getElementById('adminUsername').value;
             const password = document.getElementById('adminPassword').value;
             
+            console.log('Attempting login with:', { username });
+            
             try {
+                // Log the request payload
+                const requestBody = JSON.stringify({
+                    action: 'admin_login',
+                    username: username,
+                    password: password
+                });
+                console.log('Request body:', requestBody);
+                
                 const response = await fetch('api/auth.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
-                    body: JSON.stringify({
-                        action: 'admin_login',
-                        username: username,
-                        password: password
-                    })
+                    body: requestBody,
+                    credentials: 'same-origin'
                 });
 
-                const result = await response.json();
+                console.log('Response status:', response.status);
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+                
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (e) {
+                    console.error('Failed to parse JSON response:', e);
+                    throw new Error('Invalid server response');
+                }
 
-                if (result.success) {
+                if (!response.ok) {
+                    throw new Error(result.error || `HTTP error! status: ${response.status}`);
+                }
+
+                // If we get here, login was successful
+                if (result.success && result.data && result.data.admin_id) {
                     isLoggedIn = true;
                     window.isLoggedIn = true;
                     document.getElementById('loginModal').classList.remove('active');
                     document.getElementById('adminInterface').style.display = 'flex';
-                    updateDashboardStats();
-                    loadAdminData();
+                    try {
+                        updateDashboardStats();
+                        loadAdminData();
+                    } catch (error) {
+                        console.error('Error in login success handler:', error);
+                        alert('Login successful but encountered an error: ' + error.message);
+                    }
                 } else {
-                    alert('Invalid credentials: ' + (result.error || 'Login failed'));
+                    throw new Error(result.error || 'Invalid credentials');
                 }
             } catch (error) {
                 console.error('Login error:', error);
@@ -548,7 +576,7 @@
                 AdminModule.loadAccessCodes();
                 AdminModule.loadParticipants();
             }
-        }
+        };
 
         // Password strength checker
         function checkPasswordStrength(password) {
